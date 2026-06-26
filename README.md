@@ -1,7 +1,16 @@
 # Build Debrief Specialist
 
+[![Six designed carousel slides and a Gaps and Boosts panel, generated from one brain dump.](preview.png)](https://jmarielee.github.io/debrief-specialist/)
+
 I design how AI systems behave and decide, not just how they look. This one decides what is worth saying about the work, before I forget I knew.
 
+**Try it live:** [jmarielee.github.io/debrief-specialist](https://jmarielee.github.io/debrief-specialist/). Click **Try demo**, no API key needed, to watch a real run end to end.
+
+**For reviewers:** read [`brief.md`](./brief.md) first. One painful problem, scoped to exactly five outputs, nothing more. The judgment to notice is the scoping: what I refused to add is as deliberate as what I built.
+
+The approach here, the model labels and the math decides, is one I have been publishing and building on since Competition 7.
+
+> **Capstone submission, Month 2.** This week the builder is the client. The brief at the top of this repo ([`brief.md`](./brief.md)) is one I wrote for myself. This folder is the system that solves it.
 > **Capstone submission, Month 2.** This week the builder is the client. The brief at the top of this repo ([`brief.md`](./brief.md)) is one I wrote for myself. This folder is the system that solves it.
 
 ---
