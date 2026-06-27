@@ -69,13 +69,15 @@ This is the part that makes it a case study and not a prompt.
 
 **7. It checks its own work, and it is honest about how.** After the five outputs, a
 publish gate runs seven checks on the LinkedIn draft: em-dash, external link, hashtag
-count, a number not in the dump, a protected name, throat-clearing, and word count. In
-the folder, the model runs this as a self-check and reports pass or fail. In the
-companion app, the identical checklist runs as deterministic code, so the verdict holds
-whether or not the model cooperated. The folder self-checks. The app enforces. That gap
-is the point: a "must" in a markdown file is a request, a "must" in code is a constraint,
-and I built each at the layer where it is true. The model labels. The math decides. This
-time pointed at the tool itself. (`rules.md`, Rule 8.)
+count, a number not in the dump, a protected name, throat-clearing, and word count. The
+two that are not LinkedIn rules but honesty rules, protected name and unbacked number,
+also run on the resume and pitch lines, because those travel without context and a
+recruiter reads them as finished fact. In the folder, the model runs these as a
+self-check and reports. In the companion app, the identical checks run as deterministic
+code, so the verdict holds whether or not the model cooperated. The folder self-checks.
+The app enforces. That gap is the point: a "must" in a markdown file is a request, a
+"must" in code is a constraint, and I built each at the layer where it is true. The model
+labels. The math decides. This time pointed at the tool itself. (`rules.md`, Rule 8.)
 
 Those decisions are the same kind of thinking I bring to every system I design: the model does what it is good at, deterministic rules enforce what it cannot be trusted with, and the boundary between them is where the reliability lives.
 
