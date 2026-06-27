@@ -584,38 +584,24 @@
     .rerun-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 
-    /* ─── PUBLISH GATE - styled identical to Gaps & Boosts ─── */
-    .gate-block {
-      border-left: 3px solid var(--yellow);
-      padding: 18px 22px;
-      background: var(--paper-warm);
-      margin-top: 16px;
-    }
+    /* ─── PUBLISH GATE - styled like the Honesty check ─── */
+    .gate-block { margin-top: 14px; }
     .gate-eyebrow {
-      font-size: 9px;
+      font-size: 8.5px;
       font-weight: 600;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #7A6400;
-      margin-bottom: 13px;
+      color: #9A7A0E;
+      margin-bottom: 6px;
     }
-    .gate-row {
-      display: flex;
-      gap: 12px;
-      font-weight: 300;
-      font-size: 15px;
-      line-height: 1.85;
-      color: #3A3732;
-    }
-    .gate-pip { flex-shrink: 0; width: 14px; font-weight: 600; color: #1A1916; }
-    .gate-detail { color: #3A3732; }
-    .gate-foot {
-      font-weight: 300;
-      font-size: 13px;
-      line-height: 1.6;
-      color: #3A3732;
-      margin-top: 13px;
-    }
+    .gate-row { font-size: 11px; font-weight: 400; color: #6B6862; display: flex; gap: 7px; line-height: 1.7; }
+    .gate-row .hp { font-weight: 700; color: #1A1916; width: 11px; flex-shrink: 0; text-align: center; }
+
+    /* ─── HONESTY CHECK (resume + pitch one-liners) ─── */
+    .honesty-note { margin-top: 10px; }
+    .honesty-eyebrow { font-size: 8.5px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A7A0E; margin-bottom: 5px; }
+    .honesty-row { font-size: 11px; font-weight: 400; color: #6B6862; display: flex; gap: 7px; line-height: 1.7; }
+    .honesty-row .hp { font-weight: 700; color: #1A1916; width: 11px; flex-shrink: 0; text-align: center; }
   </style>
 </head>
 <body>
@@ -684,6 +670,7 @@
           <button class="rerun-btn" id="rerun-resume" onclick="rerunSection('resume')">&#8635;</button>
         </div>
         <div class="output-text light" id="resume-out"></div>
+        <div class="honesty-note" id="resume-note" style="display:none;"></div>
       </div>
 
       <div class="output-block">
@@ -694,6 +681,7 @@
           <button class="rerun-btn" id="rerun-pitch" onclick="rerunSection('pitch')">&#8635;</button>
         </div>
         <div class="output-text light" id="pitch-out"></div>
+        <div class="honesty-note" id="pitch-note" style="display:none;"></div>
       </div>
 
       <div class="output-block" id="carousel-block" style="display:none;">
@@ -1114,14 +1102,37 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       const pip = { pass:'\u2713', fail:'\u2717', flag:'!' };
       const verdict = fails ? (fails + ' to fix') : 'clear to publish';
       const rows = results.map(r =>
-        '<div class="gate-row"><span class="gate-pip">' + pip[r.status] + '</span>'
-        + '<span>' + r.k + (r.d ? ' <span class="gate-detail">: ' + r.d + '</span>' : '') + '</span></div>'
+        '<div class="gate-row"><span class="hp">' + pip[r.status] + '</span><span>' + r.k + '</span></div>'
       ).join('');
       panel.innerHTML =
-        '<div class="gate-eyebrow">Publish gate &nbsp;&middot;&nbsp; the math decides &nbsp;&middot;&nbsp; ' + verdict + '</div>'
-        + rows
-        + '<div class="gate-foot">The model wrote the draft. This panel is code, not the model, checking it against the voice rules. The same checklist runs in the folder as a model self-check (rules.md).</div>';
+        '<div class="gate-eyebrow">Publish gate &middot; the math decides &middot; ' + verdict + '</div>'
+        + rows;
       panel.style.display = 'block';
+    }
+
+    // Honesty checks: the two non-negotiable rules (NDA + no fabricated number),
+    // applied to the resume and pitch lines because they travel without context.
+    function honestyChecks(text, dump) {
+      text = text || ''; dump = (dump || '');
+      const low = text.toLowerCase();
+      const name = PUBLISH_PROTECTED.filter(n => low.includes(n.toLowerCase()));
+      const dnum = dump.replace(/,/g,'');
+      const nums = (text.match(/\d+(?:\.\d+)?%?/g) || []).map(n => n.replace(/,/g,''));
+      const stray = [...new Set(nums.filter(n => !dnum.includes(n.replace('%',''))))];
+      return { name, stray };
+    }
+
+    function renderHonesty(noteId, text) {
+      const note = document.getElementById(noteId);
+      if (!text || text === '(not found)') { note.style.display = 'none'; return; }
+      const r = honestyChecks(text, (typeof lastDump !== 'undefined' ? lastDump : ''));
+      const row = (ok, okTxt, badTxt) =>
+        '<div class="honesty-row"><span class="hp">' + (ok ? '\u2713' : '\u2717') + '</span><span>' + (ok ? okTxt : badTxt) + '</span></div>';
+      note.innerHTML =
+        '<div class="honesty-eyebrow">Honesty check</div>'
+        + row(!r.name.length, 'no protected client name', 'protected name: remove ' + r.name.join(', '))
+        + row(!r.stray.length, 'no unbacked number', 'number not in dump: check ' + r.stray.join(', '));
+      note.style.display = 'block';
     }
 
     function runGateUI() {
@@ -1144,6 +1155,8 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       document.getElementById('gaps-out').textContent      = get('GAPS',      'SLIDES') || get('GAPS', 'END') || '(not found)';
 
       runGateUI();
+      renderHonesty('resume-note', document.getElementById('resume-out').textContent);
+      renderHonesty('pitch-note', document.getElementById('pitch-out').textContent);
 
       // ─── Carousel slides ───
       const slidesRaw = get('SLIDES', 'END');
@@ -1435,6 +1448,8 @@ ${body}
         if (cfg.mode === 'text' && el) {
           el.textContent = result;
           if (section === 'linkedin') runGateUI();
+          if (section === 'resume') renderHonesty('resume-note', result);
+          if (section === 'pitch')  renderHonesty('pitch-note', result);
         } else if (cfg.mode === 'slides') {
           try {
             const clean = result.replace(/```json|```/g, '').trim();
@@ -1467,6 +1482,8 @@ ${body}
       document.getElementById('slide-grid').innerHTML = '';
       document.getElementById('carousel-block').style.display = 'none';
       document.getElementById('gate-panel').style.display = 'none';
+      document.getElementById('resume-note').style.display = 'none';
+      document.getElementById('pitch-note').style.display = 'none';
       _svgs = [];
 
       // Restore empty state
