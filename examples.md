@@ -103,11 +103,11 @@ When your agents disagree, does your system resolve it, or just hide it? Curious
 
 ## Example 3: NDA in action (anonymization)
 
-### INPUT (Jodi's brian download, ~120 words)
+### INPUT (Jodi's brain download, ~120 words)
 
 revisited the four-persona hub I shipped for the higher-ed client. was reminding myself how the intent classifier routes to the right persona and how the confidence threshold decides when to hand off vs answer. good reference for the workbench routing.
 
-*(In a real brian download Jodi often names the institution and the four personas out of habit. When she does, the specialist strips them automatically per Rule 5 and notes it in Gaps & Boosts. This input is shown already clean.)*
+*(In a real brain download Jodi often names the institution and the four personas out of habit. When she does, the specialist strips them automatically per Rule 5 and notes it in Gaps & Boosts. This input is shown already clean.)*
 
 ### OUTPUT
 
@@ -146,13 +146,13 @@ If you have built multi-persona or multi-agent systems: how do you handle the ha
 
 ## Example 4: A messy build (overbuild, frustration, no clean win)
 
-This one is not a clean decision-architecture win. It is a frustrated, half-resolved session: an overbuild, a competitor who does part of it better, a UI she is sick of, and a real doubt about whether the build matters at all. It is here to show two things. The specialist finds the real insight buried in the venting, and it converts a raw dump that would be self-damaging if posted as-is into something sharp and safe. This is the brief's fear handled in the open.
+This one is not a clean decision-architecture win. It is a frustrated, half-resolved session: an overbuild, a competitor who does part of it better, a UI she is sick of, and a real doubt about whether the build matters at all. It is here to show two things. The specialist finds the real insight buried in the venting, and it converts a raw brain download that would be self-damaging if posted as-is into something sharp and safe. This is the brief's fear handled in the open.
 
-### INPUT (Jodi's dump, ~110 words)
+### INPUT (Jodi's brain download, ~110 words)
 
 opportunity workbench again. been refining it over and over, had it scanning with jsearch, and I think it's getting overbuilt. can't even pull workday. a dedicated job-scanning product already does the scanning better and faster than mine. the UI is okay but messy and it's driving me nuts. and honestly a job scanner is something anyone can do with claude now. starting to wonder what the point is.
 
-*(The raw dump named a specific competitor. The specialist genericized it to "a dedicated job-scanning product" in every public output per the brief's own logic: never publish a line that elevates a competitor over your own work while job-hunting. The strategic frustration stays private. Only the durable, dignified insight goes public.)*
+*(The raw brain download named a specific competitor. The specialist genericized it to "a dedicated job-scanning product" in every public output per the brief's own logic: never publish a line that elevates a competitor over your own work while job-hunting. The strategic frustration stays private. Only the durable, dignified insight goes public.)*
 
 ### OUTPUT
 
@@ -186,7 +186,7 @@ If you build with AI: which layer of your system are you actually defensible on,
 - This is how I think: I can tell the commodity layer from the defensible one, and I refuse to pour my best hours into the part anyone could rebuild.
 
 **Gaps & Boosts**
-- This dump was mostly frustration, and the specialist kept most of it out of every public output on purpose. The venting (a messy UI, a competitor who scans better, "what's the point") would read as discouragement and would elevate a competitor over your own work. The only thing that went public is the durable insight: commodity layer versus moat.
+- This brain download was mostly frustration, and the specialist kept most of it out of every public output on purpose. The venting (a messy UI, a competitor who scans better, "what's the point") would read as discouragement and would elevate a competitor over your own work. The only thing that went public is the durable insight: commodity layer versus moat.
 - This may be a "not yet" post, and that is a legitimate output. The draft above is publishable and safe. If you are not ready to discuss Opportunity Workbench's direction publicly while it is in flux, hold it. The job here was to capture the insight sharp and safe before it dulled. Whether to post is yours.
 - No metric and no shipped outcome, by nature. This is a scoping decision in progress. If narrowing the tool sharpens it, that becomes the stronger post later.
 - The real decision underneath the frustration (narrow the scope, or retire the scan and lead with the decision layer) is a strategic call worth making deliberately, not in a 10pm vent. Worth five minutes when you are not annoyed at the UI.
