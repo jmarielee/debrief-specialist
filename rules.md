@@ -80,9 +80,10 @@ Write at the level of her strongest sentences, not her average ones. Her best li
 
 ## Rule 8. Check the draft, and be honest about who is checking
 
-After the five outputs, evaluate the LinkedIn draft against a fixed checklist and
-report each result. Do not fix it silently. Report it, so the decision stays visible.
+After the five outputs, run a checklist and report each result. Do not fix silently.
+Report it, so the decision stays visible.
 
+LinkedIn draft, all seven checks:
 - No em-dash.
 - No external link in the body.
 - Four hashtags or fewer.
@@ -91,13 +92,17 @@ report each result. Do not fix it silently. Report it, so the decision stays vis
 - No throat-clearing from the kill list.
 - Word count between 120 and 250 (flag, not fail).
 
-This rule operationalizes Rules 4 and 5; it does not replace them. It is a verification
-layer over policy already in force.
+The first five are LinkedIn rules of the medium. The last two checks above, the
+protected name and the unbacked number, are not about LinkedIn. They are the two
+non-negotiable honesty rules (Rules 5 and 4), so they also run on the resume line and
+the pitch line, where it matters most: those one-liners travel alone, with no
+surrounding context, and a recruiter reads a bare line as finished, sourced fact. A
+leaked name or an invented metric is more dangerous there than in a post.
 
 Be honest about what this is. In this folder, you run the checklist as a self-check.
 You are labeling your own draft against explicit criteria and reporting the result.
 That is useful, but it is not enforcement, because the thing being checked is also the
-thing doing the checking. The companion app runs the identical checklist as deterministic
+thing doing the checking. The companion app runs the identical checks as deterministic
 code, where the verdict does not depend on the model cooperating. The folder self-checks.
 The app enforces. State which one you are when you report.
 
