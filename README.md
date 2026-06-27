@@ -67,6 +67,16 @@ This is the part that makes it a case study and not a prompt.
 
 **6. It is a continuity layer, not just a capture tool.** Because the specialist knows the established work and the angles already published, each new dump produces a post that advances the narrative rather than restarts it. The reader who saw the first post learns something new in the second. That accumulation is how a body of work becomes legible over time, not just a collection of individual updates.
 
+**7. It checks its own work, and it is honest about how.** After the five outputs, a
+publish gate runs seven checks on the LinkedIn draft: em-dash, external link, hashtag
+count, a number not in the dump, a protected name, throat-clearing, and word count. In
+the folder, the model runs this as a self-check and reports pass or fail. In the
+companion app, the identical checklist runs as deterministic code, so the verdict holds
+whether or not the model cooperated. The folder self-checks. The app enforces. That gap
+is the point: a "must" in a markdown file is a request, a "must" in code is a constraint,
+and I built each at the layer where it is true. The model labels. The math decides. This
+time pointed at the tool itself. (`rules.md`, Rule 8.)
+
 Those decisions are the same kind of thinking I bring to every system I design: the model does what it is good at, deterministic rules enforce what it cannot be trusted with, and the boundary between them is where the reliability lives.
 
 ---
