@@ -3,7 +3,7 @@
 <p align="center">
   <img src="preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
   <img src="preview2.png" width="32%" alt="The five text outputs: LinkedIn draft, case study, resume line, pitch sentence" />
-  <img src="p{review.png" width="32%" alt="The empty state: you know what you proved, you won't for long" />
+  <img src="preview.png" width="32%" alt="The empty state: you know what you proved, you won't for long" />
 </p>
 
 I design how AI systems behave and decide, not just how they look. This one decides what is worth saying about the work, before I forget I knew.
