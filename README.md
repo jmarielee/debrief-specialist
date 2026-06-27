@@ -14,8 +14,8 @@ I design how AI systems behave and decide, not just how they look. This one deci
 **Verify it yourself, in just a few minutes.** 
 
 1. **The NDA firewall held.** Search the whole tree and the full commit history
-   for any client name. There is none. Run `git log -p | grep -i <any client name>`
-   against the history and it comes back empty. The real protected names live only
+   for any client name. There is none. Run `git log -p | grep -i "realty"` (or any client-style name you can think of)
+against the full history and it comes back empty. The real protected names live only
    in a gitignored local file that was never committed, so the firewall never had
    the thing it protects in the repo to begin with.
 2. **It anonymizes on its own.** In the live demo, the input dump names a client.
