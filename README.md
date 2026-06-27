@@ -1,9 +1,9 @@
 # Build Debrief Specialist
 
 <p align="center">
-  <img src="preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
-  <img src="preview2.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
-  <img src="preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
+  <img src="preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
+  <img src="preview2.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
+  <img src="preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
   
 </p>
 
@@ -18,14 +18,14 @@ I design how AI systems behave and decide, not just how they look. This one deci
 against the full history and it comes back empty. The real protected names live only
    in a gitignored local file that was never committed, so the firewall never had
    the thing it protects in the repo to begin with.
-2. **It anonymizes on its own.** In the live demo, the input dump names a client.
+2. **It anonymizes on its own.** In the live demo, the input brain download names a client.
    The outputs say "a real-estate brokerage." I never told it to hide that. It did,
    and flagged that it did.
 3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate runs seven checks in code, including em-dashes, a number not in the output, and a leaked name.. The model writes. Code rules it publish-ready or not.
 4. **Watch it fail on purpose.** The trap name "Northwind Realty" trips the gate
    live, so you can see the refusal happen, not just read that it exists.
 5. **It never asserts what it cannot back up.** No fabricated metric, anywhere. If
-   the dump has no number, the output has no number, and the gap is flagged.
+   the brain download has no number, the output has no number, and the gap is flagged.
 
 **For reviewers:** read [`brief.md`](./brief.md) first. One painful problem, scoped to exactly five outputs, nothing more. The judgment to notice is the scoping: what I refused to add is as deliberate as what I built.
 
@@ -41,7 +41,7 @@ I finish a build session knowing exactly what I just proved, and 48 hours later 
 
 ## What this folder does
 
-It accepts a 5-minute unstructured brain dump (messy, stream-of-consciousness, typed or voice-to-text) immediately after I ship something. It returns five artifacts, every session, same response:
+It accepts a 5-minute unstructured brain download (messy, stream-of-consciousness, typed or voice-to-text) immediately after I ship something. It returns five artifacts, every session, same response:
 
 1. **A LinkedIn post draft.** A near-finished post I trim, not a brief I build from. Claim-first, teaches one thing, written in my voice.
 2. **A portfolio case study outline.** Six parts (problem, decision, constraint, system behavior, evidence, outcome), ready to expand into a full case study.
@@ -55,7 +55,7 @@ The point is not to make me post more. It is to make the *proof of my thinking* 
 
 ## How it works
 
-The design follows one principle that comes straight from the problem: **structuring has to happen inside the capture, not after.** A notes app captures the dump and leaves it raw. Raw is useless three days later. So this system does not tidy the dump. It transforms it into five finished structures in a single pass.
+The design follows one principle that comes straight from the problem: **structuring has to happen inside the capture, not after.** A notes app captures the brain download and leaves it raw. Raw is useless three days later. So this system does not tidy the brain download. It transforms it into five finished structures in a single pass.
 
 | File | Role |
 |------|------|
@@ -71,7 +71,7 @@ The design follows one principle that comes straight from the problem: **structu
 
 This is the part that makes it a case study and not a prompt.
 
-**1. It finds the behavioral decision first.** Before writing anything, the specialist locates the architectural or behavioral choice inside the dump and makes it the lead, because in my practice the decision is the asset, not the feature. (`rules.md`, Rule 1.)
+**1. It finds the behavioral decision first.** Before writing anything, the specialist locates the architectural or behavioral choice inside the brain download and makes it the lead, because in my practice the decision is the asset, not the feature. (`rules.md`, Rule 1.)
 
 **2. It refuses to fabricate metrics, or to let unshipped work read as shipped.** If I did not give it a number, it does not invent one. A made-up "improved efficiency 40%" would betray the exact principle my work is built on: the math has to be real. The same honesty covers capability claims. Building in public is encouraged, but in-progress work has to stay legibly in-progress, especially in the one-line resume and pitch outputs that travel without context. When there is no number, it leads with the behavioral insight and flags where a real metric would strengthen the artifact. (`rules.md`, Rule 4.)
 
@@ -81,11 +81,11 @@ This is the part that makes it a case study and not a prompt.
 
 **5. It is honest about how it learns.** The folder does not learn on its own. The model has no memory between sessions, and these files do not edit themselves. What is real is a manual loop: I trim a draft into the post I publish, then paste that published version into `reference/voice-samples.md`. Each real sample pulls the next draft closer to my voice. A folder that claimed to learn automatically would be asserting something it cannot back up, which is the thing my whole practice is built against. So it does not claim that. It earns the improvement honestly. (`reference/voice-samples.md`.)
 
-**6. It is a continuity layer, not just a capture tool.** Because the specialist knows the established work and the angles already published, each new dump produces a post that advances the narrative rather than restarts it. The reader who saw the first post learns something new in the second. That accumulation is how a body of work becomes legible over time, not just a collection of individual updates.
+**6. It is a continuity layer, not just a capture tool.** Because the specialist knows the established work and the angles already published, each new brain download produces a post that advances the narrative rather than restarts it. The reader who saw the first post learns something new in the second. That accumulation is how a body of work becomes legible over time, not just a collection of individual updates.
 
 **7. It checks its own work, and it is honest about how.** After the five outputs, a
 publish gate runs seven checks on the LinkedIn draft: em-dash, external link, hashtag
-count, a number not in the dump, a protected name, throat-clearing, and word count. The
+count, a number not in the brain download, a protected name, throat-clearing, and word count. The
 two that are not LinkedIn rules but honesty rules, protected name and unbacked number,
 also run on the resume and pitch lines, because those travel without context and a
 recruiter reads them as finished fact. In the folder, the model runs these as a
@@ -102,7 +102,7 @@ Those decisions are the same kind of thinking I bring to every system I design: 
 ## How to use it
 
 1. Finish a build. While it is still hot, talk or type for five minutes: what you did, what was broken, what you decided.
-2. Drop the dump in with this folder as context.
+2. Drop the brain download in with this folder as context.
 3. Get five artifacts back. Trim the LinkedIn draft into your own voice. The other four are close to drop-in. The carousel SVGs are the exception: they need a Python-capable environment to generate and a design tool to finish. Take them into Figma, adjust any text reflow, export as PDF, and upload to LinkedIn as a swipeable carousel.
 4. **Post on a Tuesday, Wednesday, or Thursday between 8 and 10 AM.** Stay online for 90 minutes after you publish. Reply to every substantive comment within 30 minutes. The algorithm shows your post to a small seed group first. Early engagement from that group is what unlocks wider distribution. If you post and walk away, that window closes.
 5. Read the *Gaps & Boosts*. Spend five more minutes only where it pays.
