@@ -1,6 +1,6 @@
 # Build Debrief Specialist
 
-[![Six designed carousel slides and a Gaps and Boosts panel, generated from one brain dump.](preview.png)](https://jmarielee.github.io/debrief-specialist/)
+[![Six designed carousel slides and a Gaps and Boosts panel, generated from one brain dump.](Preview.png)](https://jmarielee.github.io/debrief-specialist/)
 
 I design how AI systems behave and decide, not just how they look. This one decides what is worth saying about the work, before I forget I knew.
 
