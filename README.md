@@ -11,6 +11,23 @@ I design how AI systems behave and decide, not just how they look. This one deci
 
 **Try it live:** [jmarielee.github.io/debrief-specialist](https://jmarielee.github.io/debrief-specialist/). Click **Try demo**, no API key needed, to watch a real run end to end.
 
+**Verify it yourself, in just a few minutes.** 
+
+1. **The NDA firewall held.** Clone the repo and run
+   `git log -S"Northwind Realty" --all` and a search of the tree. No real client
+   name appears in any file or in any commit in the history. The protected names
+   live only in a gitignored local file that was never committed.
+2. **It anonymizes on its own.** In the live demo, the input dump names a client.
+   The outputs say "a real-estate brokerage." I never told it to hide that. It did,
+   and flagged that it did.
+3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate
+   runs in code: it checks for em-dashes, links, a number not in the dump, a leaked
+   name, and throat-clearing. The model writes. Code rules it publish-ready or not.
+4. **Watch it fail on purpose.** The trap name "Northwind Realty" trips the gate
+   live, so you can see the refusal happen, not just read that it exists.
+5. **It never asserts what it cannot back up.** No fabricated metric, anywhere. If
+   the dump has no number, the output has no number, and the gap is flagged.
+
 **For reviewers:** read [`brief.md`](./brief.md) first. One painful problem, scoped to exactly five outputs, nothing more. The judgment to notice is the scoping: what I refused to add is as deliberate as what I built.
 
 The approach here, the model labels and the math decides, is one I have been publishing and building on since Competition 7.
