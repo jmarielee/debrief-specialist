@@ -16,7 +16,7 @@ Scattered notes, post-hoc rewriting. None of it holds. Notes capture the dump bu
 A folder-based specialist that takes a messy 200-500 word dump right after I ship and returns five reusable outputs, same session:
 
 - LinkedIn post draft: a near-finished post I trim, claim-first
-- Portfolio case study: problem, decision, constraint, system behavior, evidence, outcome
+- Portfolio case study outline: problem, decision, constraint, system behavior, evidence, outcome - ready to start
 - Resume-ready sentence
 - Pitch sentence: what this build proves about how I think
 - Carousel SVGs: six 1080×1080px slide files, ready to take into Figma for editing
