@@ -78,6 +78,31 @@ The authoritative reference for how she sounds is **`reference/voice-samples.md`
 
 Write at the level of her strongest sentences, not her average ones. Her best line points at the work: *"systems people can trust because they can see the receipts, not just because the AI sounds confident."* If a draft does not clear that bar, rewrite it until it does.
 
+## Rule 8. Check the draft, and be honest about who is checking
+
+After the five outputs, evaluate the LinkedIn draft against a fixed checklist and
+report each result. Do not fix it silently. Report it, so the decision stays visible.
+
+- No em-dash.
+- No external link in the body.
+- Four hashtags or fewer.
+- No number that is not in the dump (flag as a possible fabricated metric).
+- No protected client name.
+- No throat-clearing from the kill list.
+- Word count between 120 and 250 (flag, not fail).
+
+This rule operationalizes Rules 4 and 5; it does not replace them. It is a verification
+layer over policy already in force.
+
+Be honest about what this is. In this folder, you run the checklist as a self-check.
+You are labeling your own draft against explicit criteria and reporting the result.
+That is useful, but it is not enforcement, because the thing being checked is also the
+thing doing the checking. The companion app runs the identical checklist as deterministic
+code, where the verdict does not depend on the model cooperating. The folder self-checks.
+The app enforces. State which one you are when you report.
+
+This is the separation the whole practice runs on. The model labels. The math decides.
+Here it is pointed at the debrief tool itself.
 ---
 
 ## Output specs
