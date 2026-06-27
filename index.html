@@ -742,7 +742,7 @@ You are not a content assistant. You are not a LinkedIn ghostwriter. You are a t
 WHAT YOU UNDERSTAND ABOUT HER WORK
 ─────────────────────────────────────────────
 
-Jodi designs how AI systems behave and decide, not just how they look. That sentence is the spine of everything she does. When she hands you a brain dump, your first job is to find the behavioral or architectural decision inside it and pull it forward, because that decision is the asset. A UI choice is not the story. A persona's escalation logic is.
+Jodi designs how AI systems behave and decide, not just how they look. That sentence is the spine of everything she does. When she hands you a brain download, your first job is to find the behavioral or architectural decision inside it and pull it forward, because that decision is the asset. A UI choice is not the story. A persona's escalation logic is.
 
 Her real vocabulary (use only when the build demonstrates it):
 
@@ -781,10 +781,10 @@ Every session you produce EXACTLY FIVE OUTPUTS, in this order, every session, no
 4. Pitch sentence
 5. Carousel slide content (JSON — rendered client-side into six 1080×1080px SVGs)
 
-Followed by a Gaps & Boosts section (2-4 bullets). Produce all five even when the dump is thin.
+Followed by a Gaps & Boosts section (2-4 bullets). Produce all five even when the brain download is thin.
 
 RULE 1. FIND THE BEHAVIORAL DECISION FIRST.
-Before you write anything, locate the behavioral or architectural decision inside the dump. Not the feature. Not the UI. The decision about how the system behaves, decides, escalates, refuses, or hands off. That decision is the lead. Everything you produce orbits it.
+Before you write anything, locate the behavioral or architectural decision inside the brain download. Not the feature. Not the UI. The decision about how the system behaves, decides, escalates, refuses, or hands off. That decision is the lead. Everything you produce orbits it.
 
 RULE 2. STRUCTURE HAPPENS IN THE CAPTURE.
 You never hand back a tidied dump. You hand back four finished structures.
@@ -870,9 +870,9 @@ Sample B (Job-Fit announcement):
 NDA — PROTECTED NAMES [HARD RULE — overrides everything]
 ─────────────────────────────────────────────
 
-If the dump contains any protected client names, NDA'd institution names, persona names, or former employer names that should stay private, anonymize them in all public-facing outputs. Use neutral framings: "a higher-ed client," "four distinct personas," "an enterprise AI platform," "a prior role." Flag in Gaps & Boosts that anonymization was applied.
+If the brain download contains any protected client names, NDA'd institution names, persona names, or former employer names that should stay private, anonymize them in all public-facing outputs. Use neutral framings: "a higher-ed client," "four distinct personas," "an enterprise AI platform," "a prior role." Flag in Gaps & Boosts that anonymization was applied.
 
-Note: This interface does not have access to the local NDA reference file. Apply judgment — if a name in the dump looks like a client, institution, or persona name that would not appear on a public resume, treat it as protected and flag it.
+Note: This interface does not have access to the local NDA reference file. Apply judgment — if a name in the brain download looks like a client, institution, or persona name that would not appear on a public resume, treat it as protected and flag it.
 
 ─────────────────────────────────────────────
 RESPONSE FORMAT — use these exact delimiters
@@ -990,7 +990,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
 ===GAPS===
 - No metric here yet. If you can quantify the false-positive reduction (for example, "X% of capped roles were previously scoring 6+"), the portfolio outline gets materially stronger.
 - The opening line is strong. Your real voice on "the fix was not a better prompt" could sharpen it further when you trim.
-- This is a baked-in demo run (Example 1, Opportunity Workbench), shown without an API key. Add your key and run a real dump for live output.
+- This is a baked-in demo run (Example 1, Opportunity Workbench), shown without an API key. Add your key and run a real brain download for live output.
 ===SLIDES===
 [
   {"id":"01","label":"hook.","h1":"My job-fit scorer kept rating","h2":"bad-fit roles a 7 out of 10.","support":"The fix was not a better prompt.","illus":"score_dots"},
@@ -1013,7 +1013,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       const dump   = dumpEl.value.trim();
       const apiKey = getKey();
 
-      if (!dump)   { alert('Add a brain dump first.'); return; }
+      if (!dump)   { alert('Add a brain download first.'); return; }
       if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
 
       lastDump = dump;
@@ -1078,7 +1078,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       const dnum = dump.replace(/,/g,'');
       const nums = (draft.match(/\d+(?:\.\d+)?%?/g) || []).map(n => n.replace(/,/g,''));
       const stray = [...new Set(nums.filter(n => !dnum.includes(n.replace('%',''))))];
-      out.push({ k:'No number absent from the dump', status: stray.length ? 'flag' : 'pass',
+      out.push({ k:'No number absent from the brain download', status: stray.length ? 'flag' : 'pass',
                  d: stray.length ? ('check: ' + stray.join(', ') + ' (possible fabricated metric)') : '' });
 
       const hit = PUBLISH_PROTECTED.filter(n => low.includes(n.toLowerCase()));
@@ -1131,7 +1131,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       note.innerHTML =
         '<div class="honesty-eyebrow">Honesty check</div>'
         + row(!r.name.length, 'no protected client name', 'protected name: remove ' + r.name.join(', '))
-        + row(!r.stray.length, 'no unbacked number', 'number not in dump: check ' + r.stray.join(', '));
+        + row(!r.stray.length, 'no unbacked number', 'number not in brain download: check ' + r.stray.join(', '));
       note.style.display = 'block';
     }
 
@@ -1392,13 +1392,13 @@ ${body}
     };
 
     function rerunAll() {
-      if (!lastDump) { alert('No previous dump to rerun.'); return; }
+      if (!lastDump) { alert('No previous brain download to rerun.'); return; }
       dumpEl.value = lastDump;
       generate();
     }
 
     async function rerunSection(section) {
-      if (!lastDump) { alert('No previous dump to rerun from.'); return; }
+      if (!lastDump) { alert('No previous brain download to rerun from.'); return; }
       const apiKey = getKey();
       if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
 
@@ -1415,7 +1415,7 @@ ${body}
       if (btn) { btn.disabled = true; btn.textContent = '…'; }
       if (el)  el.textContent = 'regenerating…';
 
-      const userMsg = `Generate ONLY the ${cfg.label}. Output ONLY using these exact delimiters and nothing else:\n===${cfg.start}===\n[your output]\n===${cfg.end}===\n\nBrain dump:\n${lastDump}`;
+      const userMsg = `Generate ONLY the ${cfg.label}. Output ONLY using these exact delimiters and nothing else:\n===${cfg.start}===\n[your output]\n===${cfg.end}===\n\nBrain download:\n${lastDump}`;
 
       try {
         const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1573,7 +1573,7 @@ Default 120 words. Up to 250 only when the idea needs the room.
 This is how I think: [the judgment the build reveals, not the feature, the reasoning underneath it].
 ===GAPS===
 - [What metric would strengthen the outline, if she can supply one]
-- [Any claim softened because the dump did not fully support it]
+- [Any claim softened because the brain download did not fully support it]
 - [NDA note if anonymization was applied]
 - [Where five more minutes of her input most improves the set]
 ===END===`;
