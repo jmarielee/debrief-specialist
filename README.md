@@ -67,6 +67,14 @@ The design follows one principle that comes straight from the problem: **structu
 
 ---
 
+## How to adapt it
+
+To adapt this for yourself, replace `identity.md` with your own role and work patterns, replace `reference/voice-samples.md` with your published writing, replace any protected-name rules with your own confidentiality constraints, and add 2–3 real examples from your own work.
+
+The system is personal by design, but the structure is reusable.
+
+---
+
 ## The design decisions worth noticing
 
 This is the part that makes it a case study and not a prompt.
