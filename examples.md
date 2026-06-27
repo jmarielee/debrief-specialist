@@ -8,7 +8,7 @@ The LinkedIn output is a **draft she trims**, not a brief. It comes back close e
 
 ## Example 1: Opportunity Workbench, survivability cap
 
-### INPUT (Jodi's dump, ~250 words)
+### INPUT (Jodi's brain download, ~250 words)
 
 okay just shipped the survivability cap thing in the workbench finally. so the problem was the three evaluator personas would sometimes all be kind of generous and a job that was actually a terrible fit would still float up with like a 7/10 because no single persona killed it. each one found something to like. and that's exactly the false-positive thing I keep saying I hate. so I added a deterministic cap, before the personas even score, code checks a few hard disqualifiers, like if the role requires a credential she flatly doesn't have or it's onsite in a city she can't be in, and if any of those trip, the score is capped at like a 3 no matter what the LLM personas say. so the personas can be as generous as they want and the math still refuses to let a non-survivable job look survivable. this is the thing, the LLM labels what it sees but the math decides. the personas are good at nuance, terrible at hard limits. code is the opposite. so I let each do what it's good at. also added a little note in the UI explaining WHY a job got capped so it's not a black box. feels clean. this is the most "me" the workbench has felt.
 
@@ -103,7 +103,7 @@ When your agents disagree, does your system resolve it, or just hide it? Curious
 
 ## Example 3: NDA in action (anonymization)
 
-### INPUT (Jodi's dump, ~120 words)
+### INPUT (Jodi's brian download, ~120 words)
 
 revisited the four-persona hub I shipped for the higher-ed client. was reminding myself how the intent classifier routes to the right persona and how the confidence threshold decides when to hand off vs answer. good reference for the workbench routing.
 
