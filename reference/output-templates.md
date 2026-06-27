@@ -1,6 +1,6 @@
 # reference/output-templates.md
 
-The exact skeleton for each output. The specialist fills these every session. Structure is fixed. Content comes from the dump.
+The exact skeleton for each output. The specialist fills these every session. Structure is fixed. Content comes from the brain dump.
 
 ---
 
@@ -69,13 +69,13 @@ The highest-altitude output. What this build proves about how she thinks. The se
 
 ## 5. Carousel SVGs
 
-Six 1080×1080px SVG files generated every session. Use the Python pattern below, substituting content from the dump. Write to the outputs directory and present all six with `present_files`.
+Six 1080×1080px SVG files generated every session. Use the Python pattern below, substituting content from the brain dump. Write to the outputs directory and present all six with `present_files`.
 
 ---
 
 ### Slide content structure
 
-Each session, determine these six content blocks from the dump before generating code:
+Each session, determine these six content blocks from the brain dump before generating code:
 
 ```
 Slide 01 — hook
