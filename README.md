@@ -3,7 +3,7 @@
 <p align="center">
   <img src="preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
   <img src="preview2.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
-  <img src="Preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
+  <img src="preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
   
 </p>
 
