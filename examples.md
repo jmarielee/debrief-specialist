@@ -60,7 +60,7 @@ If you build with LLMs: where in your system are you letting the model decide so
 
 ## Example 2: Ravvel, never false consensus (no metric)
 
-### INPUT (Jodi's dump, ~200 words)
+### INPUT (Jodi's brain download, ~200 words)
 
 worked on the conflict layer in ravvel today. the five agents each plan a piece of the trip and sometimes two of them produce stuff that contradicts, like the budget agent assumes one hotel tier and the experience agent books something that blows it. the lazy fix is to just have a final agent smooth it over and present one clean itinerary like everything agreed. but that's a lie. that's false consensus. I'd rather the system SHOW the conflict and force a real resolution than paper over it. so I built the resolution layer to surface the contradiction explicitly and either resolve it by a stated rule or kick it up for a human call. travel's just the proving ground, the principle is domain-neutral, never present agreement that doesn't exist. didn't get to the Guardian overlay, that's still aspirational.
 
