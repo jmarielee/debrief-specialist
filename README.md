@@ -21,9 +21,7 @@ against the full history and it comes back empty. The real protected names live 
 2. **It anonymizes on its own.** In the live demo, the input dump names a client.
    The outputs say "a real-estate brokerage." I never told it to hide that. It did,
    and flagged that it did.
-3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate
-   runs in code: it checks for em-dashes, links, a number not in the dump, a leaked
-   name, and throat-clearing. The model writes. Code rules it publish-ready or not.
+3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate runs seven checks in code, including em-dashes, a number not in the output, and a leaked name.. The model writes. Code rules it publish-ready or not.
 4. **Watch it fail on purpose.** The trap name "Northwind Realty" trips the gate
    live, so you can see the refusal happen, not just read that it exists.
 5. **It never asserts what it cannot back up.** No fabricated metric, anywhere. If
@@ -49,7 +47,7 @@ It accepts a 5-minute unstructured brain dump (messy, stream-of-consciousness, t
 2. **A portfolio case study outline.** Six parts (problem, decision, constraint, system behavior, evidence, outcome), ready to expand into a full case study.
 3. **A resume-ready sentence.** One line, drop-in.
 4. **A pitch sentence.** What this build proves about how I think.
-5. **Six carousel SVGs.** Because the thinking is already structured, turning it into a LinkedIn carousel costs almost nothing — so the specialist does that too. Six 1080×1080px SVG files, one per slide, design system locked: white background, black illustrations, yellow text highlight. Drag into Figma or Illustrator, adjust any text reflow, export as PDF, upload to LinkedIn as a swipeable carousel. SVG files load Plus Jakarta Sans from Google Fonts in a browser; for Figma or offline use, install the font locally first.
+5. **Six carousel SVGs.** Because the thinking is already structured, turning it into a LinkedIn carousel costs almost nothing, so the specialist does that too. Six 1080×1080px SVG files, one per slide, design system locked: white background, black illustrations, yellow text highlight. Drag into Figma or Illustrator, adjust any text reflow, export as PDF, upload to LinkedIn as a swipeable carousel. SVG files load Plus Jakarta Sans from Google Fonts in a browser; for Figma or offline use, install the font locally first.
 
 The point is not to make me post more. It is to make the *proof of my thinking* nearly free to capture while it is still alive, because the gap between what I build and what the market can see me build is the thing standing between me and the next role.
 
