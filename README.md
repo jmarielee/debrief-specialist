@@ -1,6 +1,10 @@
 # Build Debrief Specialist
 
-[![Six designed carousel slides and a Gaps and Boosts panel, generated from one brain dump.](preview1.png)(preview2.png)(Preview.png)](https://jmarielee.github.io/debrief-specialist/)
+<p align="center">
+  <img src="Preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain dump" />
+  <img src="preview2.png" width="32%" alt="The five text outputs: LinkedIn draft, case study, resume line, pitch sentence" />
+  <img src="preview1.png" width="32%" alt="The empty state: you know what you proved, you won't for long" />
+</p>
 
 I design how AI systems behave and decide, not just how they look. This one decides what is worth saying about the work, before I forget I knew.
 
@@ -10,7 +14,6 @@ I design how AI systems behave and decide, not just how they look. This one deci
 
 The approach here, the model labels and the math decides, is one I have been publishing and building on since Competition 7.
 
-> **Capstone submission, Month 2.** This week the builder is the client. The brief at the top of this repo ([`brief.md`](./brief.md)) is one I wrote for myself. This folder is the system that solves it.
 > **Capstone submission, Month 2.** This week the builder is the client. The brief at the top of this repo ([`brief.md`](./brief.md)) is one I wrote for myself. This folder is the system that solves it.
 
 ---
