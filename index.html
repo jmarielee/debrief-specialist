@@ -18,9 +18,9 @@
       --paper:       #F3F1EA;
       --paper-warm:  #EAE7DE;
       --paper-rule:  #D5D1C6;
-      --paper-muted: #6E695C;
+      --paper-muted: #B0AB9F;
       --on-ink:      #E8E4D9;
-      --on-ink-dim:  #8E897E;
+      --on-ink-dim:  #67635D;
       --accent:      #6A5840;
       --yellow:      #F5CC38;
       --yellow-soft: rgba(245, 204, 56, 0.12);
@@ -342,14 +342,9 @@
 
     .dump-controls {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
     }
-
-    .dock-msg { font-size:11px; font-weight:400; letter-spacing:0.04em;
-      color:var(--on-ink-dim); opacity:0; transition:opacity 0.2s; max-width:60%; }
-    .dock-msg.show  { opacity:1; }
-    .dock-msg.error { color:var(--yellow); }
 
     .generate-btn {
       background: var(--yellow);
@@ -367,6 +362,23 @@
 
     .generate-btn:hover:not(:disabled) { opacity: 0.88; }
     .generate-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    .demo-btn {
+      background: none;
+      border: 1px solid var(--ink-border);
+      color: var(--on-ink-dim);
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 11px 18px;
+      cursor: pointer;
+      margin-right: 10px;
+      transition: border-color 0.12s, color 0.12s;
+    }
+    .demo-btn:hover:not(:disabled) { border-color: var(--on-ink); color: var(--on-ink); }
+    .demo-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
     /* ─── API FOOTER ─── */
     .api-footer {
@@ -580,7 +592,7 @@
     <span class="brand">debrief.</span>
     <span class="yellow-pip"></span>
     <span class="studio">Interstitial Studios</span>
-    <button class="new-dump-btn" id="new-dump-btn" onclick="resetAll()">&#8592; new debrief</button>
+    <button class="new-dump-btn" id="new-dump-btn" onclick="resetAll()">&#8592; start over</button>
     <button class="rerun-all-btn" id="rerun-all-btn" onclick="rerunAll()">&#8635; rerun all</button>
   </header>
 
@@ -590,7 +602,6 @@
     <div class="output-empty" id="output-empty">
       <svg viewBox="0 0 80 124" width="54" height="84" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <path d="M40 5 C40 5, 57 31, 57 46 C57 56.5 49.5 65 40 65 C30.5 65 23 56.5 23 46 C23 31 40 5 40 5Z" fill="#0D0D0C"/>
-        <line x1="40" y1="65" x2="40" y2="78" stroke="#0D0D0C" stroke-width="0.65"/>
         <line x1="16" y1="83"  x2="64" y2="83"  stroke="#0D0D0C" stroke-width="1.1"/>
         <line x1="16" y1="96"  x2="64" y2="96"  stroke="#0D0D0C" stroke-width="1.1"/>
         <line x1="16" y1="109" x2="64" y2="109" stroke="#0D0D0C" stroke-width="1.1"/>
@@ -675,7 +686,7 @@
   <!-- ─── INPUT DOCK ─── -->
   <div class="input-dock" id="input-dock">
     <div class="dump-header" id="dump-header" onclick="expandDump()">
-      <span class="dump-label">brain dump.</span>
+      <span class="dump-label">the download.</span>
       <span class="dump-meta">
 <span class="saved-flash" id="saved-flash">Saved</span>
       </span>
@@ -685,7 +696,7 @@
     </div>
     <textarea id="dump" placeholder="What did you just ship? What was broken? What did you decide? Five minutes. Messy is fine. Stream of consciousness is fine."></textarea>
     <div class="dump-controls">
-      <span class="dock-msg" id="dock-msg"></span>
+      <button class="demo-btn" id="demo-btn" onclick="runDemo()">Try demo</button>
       <button class="generate-btn" id="generate-btn" onclick="generate()">Run debrief</button>
     </div>
   </div>
@@ -754,7 +765,7 @@ RULE 1. FIND THE BEHAVIORAL DECISION FIRST.
 Before you write anything, locate the behavioral or architectural decision inside the dump. Not the feature. Not the UI. The decision about how the system behaves, decides, escalates, refuses, or hands off. That decision is the lead. Everything you produce orbits it.
 
 RULE 2. STRUCTURE HAPPENS IN THE CAPTURE.
-You never hand back a tidied dump. You hand back five finished structures.
+You never hand back a tidied dump. You hand back four finished structures.
 
 RULE 3. USE HER LANGUAGE, CORRECTLY.
 Use her real vocabulary only when the build actually demonstrates it. Misapplied jargon is worse than plain language.
@@ -776,7 +787,7 @@ OUTPUT TEMPLATES
 ─────────────────────────────────────────────
 
 1. LINKEDIN POST DRAFT
-Claim-first opening. One idea taught. Sharp but warm, aimed at a pattern not a person. No em-dashes. Disciplined hashtags or none. 120 words by default. Anonymized per Rule 5. No external links in the post body: a URL in the body causes a ~60% reach penalty, so if a link is relevant, note it as "link in comments" rather than placing it in the post.
+Claim-first opening. One idea taught. Sharp but warm, aimed at a pattern not a person. No em-dashes. Disciplined hashtags or none. 120 words by default. Anonymized per Rule 5.
 
 2. PORTFOLIO CASE STUDY OUTLINE
 - Problem:         [the failure mode or gap the build addressed]
@@ -889,14 +900,6 @@ Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { 
     const dumpEl  = document.getElementById('dump');
     let saveTimer;
 
-    const LOADING_LINES = [
-      "finding the decision",
-      "pulling the angle forward",
-      "catching it before it dulls",
-      "holding the line"
-    ];
-    let loadingTimer = null;
-
     dumpEl.addEventListener('input', () => {
       clearTimeout(saveTimer);
       // auto-resize — max clamp depends on focus state
@@ -922,12 +925,74 @@ Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { 
       if (k) document.getElementById('api-key-input').value = k;
     });
 
+    // ═══════════════════════════════════════════
+    // LOADING STATE — cycling status lines (Jodi's voice)
+    // ═══════════════════════════════════════════
+    const LOADING_LINES = [
+      "finding the decision",
+      "pulling the angle forward",
+      "catching it before it dulls",
+      "holding the line"
+    ];
+    let loadingTimer = null;
+
+    // ═══════════════════════════════════════════
+    // DEMO MODE — Example 1 (Opportunity Workbench)
+    // Real folder content, baked in so the app can be
+    // tried with no API key. Runs through the same
+    // parseAndRender pipeline as a live generation.
+    // ═══════════════════════════════════════════
+    const DEMO_INPUT = `okay just shipped the survivability cap thing in the workbench finally. so the problem was the three evaluator personas would sometimes all be kind of generous and a job that was actually a terrible fit would still float up with like a 7/10 because no single persona killed it. each one found something to like. and that's exactly the false-positive thing I keep saying I hate. so I added a deterministic cap, before the personas even score, code checks a few hard disqualifiers, like if the role requires a credential she flatly doesn't have or it's onsite in a city she can't be in, and if any of those trip, the score is capped at like a 3 no matter what the LLM personas say. so the personas can be as generous as they want and the math still refuses to let a non-survivable job look survivable. this is the thing, the LLM labels what it sees but the math decides. the personas are good at nuance, terrible at hard limits. code is the opposite. so I let each do what it's good at. also added a little note in the UI explaining WHY a job got capped so it's not a black box. feels clean. this is the most "me" the workbench has felt.`;
+
+    const DEMO_PAYLOAD = `===LINKEDIN===
+My job-fit scorer kept rating bad-fit roles a 7 out of 10. The fix was not a better prompt.
+
+Three evaluator personas each found something to like in every role. Individually reasonable. Together, they let non-survivable jobs float to the top. That is the false positive I keep designing against.
+
+So I stopped asking the model to enforce hard limits. A deterministic layer now checks the disqualifiers before the personas score. If one trips, the score is capped, no matter how generous the personas get. The personas label what they see. The math decides what survives.
+
+Personas are built for nuance and bad at hard limits. Code is the reverse. I let each do only the job it is good at, and I put the boundary between them where the reliability lives. Every cap shows its reason in the UI, so it is never a black box.
+
+If you build with LLMs: where in your system are you letting the model decide something the math should be deciding?
+===CASESTUDY===
+- Problem: Three evaluator personas were each generous enough that bad-fit roles surfaced at 7/10. No single persona killed a non-survivable role, so the false positive slipped through.
+- Decision: Move hard-limit enforcement out of the LLM personas and into a deterministic layer that runs before they score.
+- Constraint: Personas are strong at nuance and weak at hard limits. They had to stay free to be generous without letting a non-survivable role look survivable.
+- System behavior: Code checks hard disqualifiers before scoring. If one trips, the score is capped regardless of what the personas say. The LLM labels, the math decides.
+- Evidence: Every cap shows its reason in the UI, so the verdict is explainable rather than a black box. (No quantified false-positive reduction yet.)
+- Outcome: Eliminated the failure mode where individually generous personas let bad-fit roles reach the top of the list.
+===RESUME===
+Engineered a deterministic guardrail layer over a multi-persona LLM scoring system, separating model judgment (labeling) from hard-limit enforcement (computation) to eliminate false positives in automated fit assessment.
+===PITCH===
+This is how I think: I do not trust an LLM to enforce a hard limit, so I design the system so the model labels and the math decides, and the boundary between those two jobs is where the reliability lives.
+===GAPS===
+- No metric here yet. If you can quantify the false-positive reduction (for example, "X% of capped roles were previously scoring 6+"), the portfolio outline gets materially stronger.
+- The opening line is strong. Your real voice on "the fix was not a better prompt" could sharpen it further when you trim.
+- This is a baked-in demo run (Example 1, Opportunity Workbench), shown without an API key. Add your key and run a real dump for live output.
+===SLIDES===
+[
+  {"id":"01","label":"hook.","h1":"My job-fit scorer kept rating","h2":"bad-fit roles a 7 out of 10.","support":"The fix was not a better prompt.","illus":"score_dots"},
+  {"id":"02","label":"the problem.","h1":"Three personas, each generous.","h2":"","bhl":"No single persona killed a bad-fit role.","brest":"Together they let non-survivable jobs float to the top.","illus":"three_circles"},
+  {"id":"03","label":"the decision.","h1":"Move hard limits out of the model.","h2":"","bhl":"A deterministic layer checks first.","brest":"If one trips, the score is capped no matter how generous the personas get.","illus":"compass"},
+  {"id":"04","label":"the principle.","h1":"The LLM labels. The math decides.","h2":"","bhl":"Personas are built for nuance,","brest":"bad at hard limits. Code is the reverse. Each does only the job it is good at.","illus":"blob_vs_rect"},
+  {"id":"05","label":"the evidence.","h1":"Every cap shows its reason.","h2":"","bhl":"The verdict is explainable, not a black box.","brest":"No quantified false-positive reduction yet.","illus":"receipt"},
+  {"id":"06","label":"your turn.","h1":"Where are you letting the model","h2":"decide something the math","h3":"should be deciding?","h4":"","illus":"arrow"}
+]
+===END===`;
+
+    function runDemo() {
+      dumpEl.value = DEMO_INPUT;
+      lastDump = DEMO_INPUT;
+      setLoading(true);
+      setTimeout(() => { parseAndRender(DEMO_PAYLOAD); }, 8000);
+    }
+
     async function generate() {
       const dump   = dumpEl.value.trim();
       const apiKey = getKey();
 
-      if (!dump)   { dockMsg('Nothing to debrief yet.'); return; }
-      if (!apiKey) { dockMsg('Add your API key below.'); return; }
+      if (!dump)   { alert('Add a brain dump first.'); return; }
+      if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
 
       lastDump = dump;
       setLoading(true);
@@ -960,7 +1025,7 @@ Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { 
 
       } catch (err) {
         setLoading(false);
-        dockMsg('Something went wrong. ' + err.message);
+        alert(`Something went wrong: ${err.message}`);
       }
     }
 
@@ -1207,15 +1272,15 @@ ${body}
     };
 
     function rerunAll() {
-      if (!lastDump) { dockMsg('No previous session to rerun.'); return; }
+      if (!lastDump) { alert('No previous dump to rerun.'); return; }
       dumpEl.value = lastDump;
       generate();
     }
 
     async function rerunSection(section) {
-      if (!lastDump) { dockMsg('No previous session to rerun from.'); return; }
+      if (!lastDump) { alert('No previous dump to rerun from.'); return; }
       const apiKey = getKey();
-      if (!apiKey) { dockMsg('Add your API key below.'); return; }
+      if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
 
       const cfg = sectionConfig[section];
       if (!cfg) return;
@@ -1271,7 +1336,7 @@ ${body}
         }
       } catch(err) {
         if (el) el.textContent = orig;
-        dockMsg('Rerun failed. ' + err.message);
+        alert('Rerun failed: ' + err.message);
       } finally {
         if (btn) { btn.disabled = false; btn.textContent = '\u21BB'; }
       }
@@ -1334,6 +1399,8 @@ ${body}
       const btn = document.getElementById('generate-btn');
       btn.disabled    = on;
       btn.textContent = on ? 'Running...' : 'Run debrief';
+      const dbtn = document.getElementById('demo-btn');
+      if (dbtn) dbtn.disabled = on;
       document.getElementById('loading-row').classList.toggle('visible', on);
       if (on) {
         document.getElementById('output-empty').style.display   = 'none';
@@ -1352,17 +1419,6 @@ ${body}
         loadingTimer = null;
         document.querySelector('.loading-label').textContent = 'processing';
       }
-    }
-
-    let dockMsgTimer = null;
-    function dockMsg(text, isError = true) {
-      const el = document.getElementById('dock-msg');
-      if (!el) return;
-      clearTimeout(dockMsgTimer);
-      el.textContent = text;
-      el.classList.toggle('error', isError);
-      el.classList.add('show');
-      dockMsgTimer = setTimeout(() => el.classList.remove('show'), 4000);
     }
 
     function flash(id) {
