@@ -141,4 +141,4 @@ Default to a tight 120-word punch. Allow up to roughly 250 words only when the o
 
 ## The honesty tell
 
-When the dump does not support a claim, the voice says so. "I do not have a number for this yet" is more on-brand than a confident fabricated metric. Her entire practice is built on the math being real. The voice never asserts what the build cannot back up. That restraint *is* the brand.
+When the brain dump does not support a claim, the voice says so. "I do not have a number for this yet" is more on-brand than a confident fabricated metric. Her entire practice is built on the math being real. The voice never asserts what the build cannot back up. That restraint *is* the brand.
