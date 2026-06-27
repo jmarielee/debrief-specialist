@@ -1,0 +1,4 @@
+# NDA-protected names live only on your machine. Never commit them.
+reference/nda-protected.local.md
+*.local.md
+.DS_Store
