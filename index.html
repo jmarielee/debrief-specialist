@@ -645,6 +645,12 @@
     }
     .gate-detail.is-fail { color: var(--red); border-left-color: var(--red); background: var(--red-soft); }
 
+    /* ─── RUN WARNING (partial / truncated run) ─── */
+    .run-warning { border-left: 3px solid var(--flag); background: rgba(122,100,0,0.07); padding: 15px 20px; margin-bottom: 36px; }
+    .run-warn-title { font-size: 14px; font-weight: 700; color: var(--flag); margin-bottom: 5px; }
+    .run-warn-body { font-size: 13px; font-weight: 400; line-height: 1.65; color: var(--ink-muted); }
+    .run-warn-body b { font-weight: 700; color: var(--flag); }
+
     /* ─── PARSE FAILURE ─── */
     .parse-fail { border-left: 3px solid var(--red); background: var(--red-soft); padding: 18px 22px; }
     .parse-fail-title { font-size: 15px; font-weight: 700; color: var(--red); margin-bottom: 7px; }
@@ -701,6 +707,8 @@
     </div>
 
     <div class="output-sections" id="output-sections">
+
+      <div class="run-warning" id="run-warning" style="display:none;"></div>
 
       <div class="output-block">
         <div class="output-meta">
@@ -1113,7 +1121,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
           },
           body: JSON.stringify({
             model: MODEL,
-            max_tokens: 4096,
+            max_tokens: 16000,
             system: SYSTEM_PROMPT,
             messages: [{ role: 'user', content: dump }],
           }),
@@ -1125,7 +1133,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
         }
 
         const data = await response.json();
-        parseAndRender(extractText(data));
+        parseAndRender(extractText(data), { stop: data.stop_reason, usage: data.usage });
 
       } catch (err) {
         setLoading(false);
@@ -1268,6 +1276,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       document.getElementById('resume-note').style.display = 'none';
       document.getElementById('pitch-note').style.display  = 'none';
       document.getElementById('carousel-block').style.display = 'none';
+      document.getElementById('run-warning').style.display = 'none';
       setLoading(false);
       document.getElementById('rerun-all-btn').style.display = 'block';
       document.getElementById('new-dump-btn').style.display  = 'block';
@@ -1276,14 +1285,31 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       document.getElementById('output-wrap').scrollTop = 0;
     }
 
+    function renderRunWarning(missing, meta) {
+      const el = document.getElementById('run-warning');
+      if (!missing.length) { el.style.display = 'none'; return; }
+      const cut = meta && meta.stop === 'max_tokens';
+      el.innerHTML =
+        '<div class="run-warn-title">' + (cut
+          ? 'The run was cut off before it finished.'
+          : 'Some sections did not come back.') + '</div>'
+        + '<p class="run-warn-body">Missing: <b>' + esc(missing.join(', ')) + '</b>. '
+        + (cut
+            ? 'The model hit its output limit. Shorten the brain download, or rerun the missing sections one at a time.'
+            : 'The model skipped these. Use the rerun arrow on each, or run the whole thing again.')
+        + ' What is below is incomplete. Do not treat it as a finished set.</p>';
+      el.style.display = 'block';
+    }
+
     function runGateUI() {
       const d = document.getElementById('linkedin-out').textContent || '';
       if (!d || d === '(not found)') { document.getElementById('gate-panel').style.display = 'none'; return; }
       renderGate(runPublishGate(d, (typeof lastDump !== 'undefined' ? lastDump : '')));
     }
 
-    function parseAndRender(raw) {
+    function parseAndRender(raw, meta) {
       raw = raw || '';
+      meta = meta || {};
       const get = (start, end) => {
         const re = new RegExp(`===\\s*${start}\\s*===([\\s\\S]*?)===\\s*${end}\\s*===`);
         const m  = raw.match(re);
@@ -1298,10 +1324,20 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
 
       // If not one delimiter parsed, the model answered in prose. Say so and show
       // what actually came back, instead of five identical "(not found)" boxes.
-      if (!get('LINKEDIN','CASESTUDY') && !get('CASESTUDY','RESUME') && !get('RESUME','PITCH')) {
-        renderParseFailure(raw);
-        return;
-      }
+      const got = {
+        LinkedIn:   !!get('LINKEDIN','CASESTUDY'),
+        'case study': !!get('CASESTUDY','RESUME'),
+        resume:     !!get('RESUME','PITCH'),
+        pitch:      !!get('PITCH','GAPS'),
+        gaps:       !!(get('GAPS','SLIDES') || get('GAPS','END')),
+      };
+      const missing = Object.keys(got).filter(k => !got[k]);
+
+      if (missing.length === 5) { renderParseFailure(raw); return; }
+
+      // Some sections arrived and some did not. That is a cut-off run, not a
+      // format failure, and the user needs to be told which is which.
+      renderRunWarning(missing, meta);
 
       runGateUI();
       renderHonesty('resume-note', document.getElementById('resume-out').textContent);
@@ -1577,7 +1613,7 @@ ${body}
           },
           body: JSON.stringify({
             model: MODEL,
-            max_tokens: 1500,
+            max_tokens: 4000,
             system: SYSTEM_PROMPT,
             messages: [{ role: 'user', content: userMsg }],
           }),
@@ -1633,6 +1669,7 @@ ${body}
       document.getElementById('gate-panel').style.display = 'none';
       document.getElementById('resume-note').style.display = 'none';
       document.getElementById('pitch-note').style.display = 'none';
+      document.getElementById('run-warning').style.display = 'none';
       _svgs = [];
 
       // Restore empty state
