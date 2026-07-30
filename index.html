@@ -26,6 +26,7 @@
       --yellow-soft: rgba(245, 204, 56, 0.12);
       --red:         #9B3223;
       --red-soft:    rgba(155, 50, 35, 0.06);
+      --green:       #3F6B45;
       --flag:        #7A6400;
 
       --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
@@ -608,11 +609,13 @@
       margin-bottom: 9px;
       color: var(--ink);
     }
+    .gate-verdict.is-clear   { color: var(--green); }
     .gate-verdict.is-blocked { color: var(--red); }
 
     .gate-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
     .gate-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; }
-    .gate-row.is-pass .hp { color: var(--paper-muted); }
+    /* Colour lives in the mark, not the label, so a clean panel stays quiet. */
+    .gate-row.is-pass .hp { color: var(--green); }
     .gate-row.is-flag { color: var(--flag); }
     .gate-row.is-flag .hp { color: var(--flag); }
     .gate-row.is-fail { color: var(--red); font-weight: 600; }
@@ -634,7 +637,7 @@
     .honesty-note { margin-top: 28px; }
     .honesty-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A7A0E; margin-bottom: 5px; }
     .honesty-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
-    .honesty-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; color: var(--paper-muted); }
+    .honesty-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; color: var(--green); }
     .honesty-row.is-fail { color: var(--red); font-weight: 600; }
     .honesty-row.is-fail .hp { color: var(--red); }
   </style>
@@ -1165,7 +1168,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
 
       panel.innerHTML =
         '<div class="gate-eyebrow">Publish gate &middot; the math decides</div>'
-        + '<div class="gate-verdict' + (fails ? ' is-blocked' : '') + '">' + verdict + '</div>'
+        + '<div class="gate-verdict ' + (fails ? 'is-blocked' : 'is-clear') + '">' + verdict + '</div>'
         + rows;
       panel.style.display = 'block';
     }
