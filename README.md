@@ -1,9 +1,9 @@
 # Build Debrief Specialist
 
 <p align="center">
-  <img src="Preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
-  <img src="Preview2.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
-  <img src="Preview3.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
+  <img src="preview1.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
+  <img src="preview2.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
+  <img src="preview.png" width="32%" alt="Six carousel slides and a Gaps and Boosts panel generated from one brain download" />
   
 </p>
 
