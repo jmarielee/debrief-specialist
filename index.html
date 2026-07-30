@@ -645,6 +645,17 @@
     }
     .gate-detail.is-fail { color: var(--red); border-left-color: var(--red); background: var(--red-soft); }
 
+    /* ─── PARSE FAILURE ─── */
+    .parse-fail { border-left: 3px solid var(--red); background: var(--red-soft); padding: 18px 22px; }
+    .parse-fail-title { font-size: 15px; font-weight: 700; color: var(--red); margin-bottom: 7px; }
+    .parse-fail-body { font-size: 13px; font-weight: 400; line-height: 1.65; color: var(--ink-muted); margin-bottom: 15px; }
+    .parse-fail-label { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--flag); margin-bottom: 6px; }
+    .parse-fail-raw {
+      font-family: var(--mono); font-size: 12px; line-height: 1.6; color: var(--ink-muted);
+      background: var(--paper); border: 1px solid var(--paper-rule); padding: 11px 13px;
+      max-height: 320px; overflow: auto; white-space: pre-wrap; word-break: break-word;
+    }
+
     /* ─── HONESTY CHECK (resume + pitch one-liners) ─── */
     .honesty-note { margin-top: 28px; }
     .honesty-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--flag); margin-bottom: 5px; }
@@ -959,6 +970,23 @@ Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { 
     // One place, so the two call sites can never drift apart.
     const MODEL = 'claude-sonnet-5';
 
+    // The API returns an ARRAY of content blocks and only some of them are text.
+    // Newer models can lead with a non-text block, so content[0] is not safe to
+    // assume. Pull blocks by type and join them.
+    function extractText(data) {
+      const blocks = (data && Array.isArray(data.content)) ? data.content : [];
+      const text = blocks
+        .filter(b => b && b.type === 'text' && typeof b.text === 'string')
+        .map(b => b.text)
+        .join('\n')
+        .trim();
+      if (!text) {
+        const kinds = blocks.map(b => (b && b.type) || '?').join(', ') || 'none';
+        throw new Error('No text block in the response. Blocks returned: ' + kinds);
+      }
+      return text;
+    }
+
     function saveKey() {
       const val = document.getElementById('api-key-input').value.trim();
       if (!val) return;
@@ -1097,7 +1125,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
         }
 
         const data = await response.json();
-        parseAndRender(data.content[0].text);
+        parseAndRender(extractText(data));
 
       } catch (err) {
         setLoading(false);
@@ -1222,6 +1250,32 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       note.style.display = 'block';
     }
 
+    // The model replied, but not in the delimiter format. Keeping the raw reply is
+    // the whole point: without it the user gets five dead boxes and no way to debug.
+    function renderParseFailure(raw) {
+      document.getElementById('linkedin-out').innerHTML =
+        '<div class="parse-fail">'
+        + '<div class="parse-fail-title">Could not parse the response.</div>'
+        + '<p class="parse-fail-body">The model replied, but without the section markers this tool needs. '
+        + 'Nothing was checked and nothing below is usable. Try again, or shorten the brain download.</p>'
+        + '<div class="parse-fail-label">What came back</div>'
+        + '<pre class="parse-fail-raw">' + esc(raw || '(empty response)') + '</pre>'
+        + '</div>';
+      ['casestudy-out','resume-out','pitch-out','gaps-out'].forEach(id => {
+        document.getElementById(id).textContent = '';
+      });
+      document.getElementById('gate-panel').style.display  = 'none';
+      document.getElementById('resume-note').style.display = 'none';
+      document.getElementById('pitch-note').style.display  = 'none';
+      document.getElementById('carousel-block').style.display = 'none';
+      setLoading(false);
+      document.getElementById('rerun-all-btn').style.display = 'block';
+      document.getElementById('new-dump-btn').style.display  = 'block';
+      document.getElementById('output-empty').style.display  = 'none';
+      document.getElementById('output-sections').classList.add('visible');
+      document.getElementById('output-wrap').scrollTop = 0;
+    }
+
     function runGateUI() {
       const d = document.getElementById('linkedin-out').textContent || '';
       if (!d || d === '(not found)') { document.getElementById('gate-panel').style.display = 'none'; return; }
@@ -1229,6 +1283,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
     }
 
     function parseAndRender(raw) {
+      raw = raw || '';
       const get = (start, end) => {
         const re = new RegExp(`===\\s*${start}\\s*===([\\s\\S]*?)===\\s*${end}\\s*===`);
         const m  = raw.match(re);
@@ -1240,6 +1295,13 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       document.getElementById('resume-out').textContent    = get('RESUME',    'PITCH')      || '(not found)';
       document.getElementById('pitch-out').textContent     = get('PITCH',     'GAPS')       || '(not found)';
       document.getElementById('gaps-out').textContent      = get('GAPS',      'SLIDES') || get('GAPS', 'END') || '(not found)';
+
+      // If not one delimiter parsed, the model answered in prose. Say so and show
+      // what actually came back, instead of five identical "(not found)" boxes.
+      if (!get('LINKEDIN','CASESTUDY') && !get('CASESTUDY','RESUME') && !get('RESUME','PITCH')) {
+        renderParseFailure(raw);
+        return;
+      }
 
       runGateUI();
       renderHonesty('resume-note', document.getElementById('resume-out').textContent);
@@ -1527,7 +1589,7 @@ ${body}
         }
 
         const data = await response.json();
-        const raw  = data.content[0].text;
+        const raw  = extractText(data);
         const re   = new RegExp('===\\s*' + cfg.start + '\\s*===([\\s\\S]*?)===\\s*' + cfg.end + '\\s*===');
         const m    = raw.match(re);
         const result = m ? m[1].trim() : raw.trim();
