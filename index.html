@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>debrief. — Interstitial Studios</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-  <style>
+<!DOCTYPE html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -612,6 +605,19 @@
     .gate-verdict.is-clear   { color: var(--green); }
     .gate-verdict.is-blocked { color: var(--red); }
 
+    /* Always rendered, including on a clean pass. A caveat that only appears on
+       failure teaches the reader that green means nothing left to read. */
+    .gate-scope {
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--flag);
+      background: rgba(122, 100, 0, 0.07);
+      border-left: 2px solid var(--flag);
+      padding: 6px 9px;
+      margin: -3px 0 11px 0;
+    }
+    .gate-scope b { font-weight: 700; }
+
     .gate-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
     .gate-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; }
     /* Colour lives in the mark, not the label, so a clean panel stays quiet. */
@@ -640,475 +646,28 @@
     .honesty-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; color: var(--green); }
     .honesty-row.is-fail { color: var(--red); font-weight: 600; }
     .honesty-row.is-fail .hp { color: var(--red); }
-  </style>
-</head>
-<body>
-
-  <!-- ─── HEADER ─── -->
-  <header>
-    <span class="brand">debrief.</span>
-    <span class="yellow-pip"></span>
-    <span class="studio">Interstitial Studios</span>
-    <button class="new-dump-btn" id="new-dump-btn" onclick="resetAll()">&#8592; start over</button>
-    <button class="rerun-all-btn" id="rerun-all-btn" onclick="rerunAll()">&#8635; rerun all</button>
-  </header>
-
-  <!-- ─── OUTPUT ─── -->
-  <div class="output-wrap" id="output-wrap">
-
-    <div class="output-empty" id="output-empty">
-      <svg viewBox="0 0 80 124" width="54" height="84" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M40 5 C40 5, 57 31, 57 46 C57 56.5 49.5 65 40 65 C30.5 65 23 56.5 23 46 C23 31 40 5 40 5Z" fill="#0D0D0C"/>
-        <line x1="16" y1="83"  x2="64" y2="83"  stroke="#0D0D0C" stroke-width="1.1"/>
-        <line x1="16" y1="96"  x2="64" y2="96"  stroke="#0D0D0C" stroke-width="1.1"/>
-        <line x1="16" y1="109" x2="64" y2="109" stroke="#0D0D0C" stroke-width="1.1"/>
-        <line x1="16" y1="122" x2="64" y2="122" stroke="#0D0D0C" stroke-width="1.1"/>
-      </svg>
-      <p class="empty-title">you know what you proved.<br>you won't for long.</p>
-      <p class="empty-sub">the clarity has a 48-hour window.</p>
-    </div>
-
-    <div class="loading-row" id="loading-row">
-      <div class="loading-dots">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-      <span class="loading-label">processing</span>
-    </div>
-
-    <div class="output-sections" id="output-sections">
-
-      <div class="output-block">
-        <div class="output-meta">
-          <span class="out-num">01 —</span>
-          <span class="out-label">&thinsp;LinkedIn post draft.</span>
-          <button class="copy-btn" onclick="copy('linkedin-out', this)">Copy</button>
-          <button class="rerun-btn" id="rerun-linkedin" onclick="rerunSection('linkedin')">&#8635;</button>
-        </div>
-        <div class="output-text" id="linkedin-out"></div>
-        <div class="gate-block" id="gate-panel" style="display:none;"></div>
-      </div>
-
-      <div class="output-block">
-        <div class="output-meta">
-          <span class="out-num">02 —</span>
-          <span class="out-label">&thinsp;Portfolio case study outline.</span>
-          <button class="copy-btn" onclick="copy('casestudy-out', this)">Copy</button>
-          <button class="rerun-btn" id="rerun-casestudy" onclick="rerunSection('casestudy')">&#8635;</button>
-        </div>
-        <div class="output-text mono-style" id="casestudy-out"></div>
-      </div>
-
-      <div class="output-block">
-        <div class="output-meta">
-          <span class="out-num">03 —</span>
-          <span class="out-label">&thinsp;Resume-ready sentence.</span>
-          <button class="copy-btn" onclick="copy('resume-out', this)">Copy</button>
-          <button class="rerun-btn" id="rerun-resume" onclick="rerunSection('resume')">&#8635;</button>
-        </div>
-        <div class="output-text light" id="resume-out"></div>
-        <div class="honesty-note" id="resume-note" style="display:none;"></div>
-      </div>
-
-      <div class="output-block">
-        <div class="output-meta">
-          <span class="out-num">04 —</span>
-          <span class="out-label">&thinsp;Pitch sentence.</span>
-          <button class="copy-btn" onclick="copy('pitch-out', this)">Copy</button>
-          <button class="rerun-btn" id="rerun-pitch" onclick="rerunSection('pitch')">&#8635;</button>
-        </div>
-        <div class="output-text light" id="pitch-out"></div>
-        <div class="honesty-note" id="pitch-note" style="display:none;"></div>
-      </div>
-
-      <div class="output-block" id="carousel-block" style="display:none;">
-        <div class="output-meta">
-          <span class="out-num">05 &mdash;</span>
-          <span class="out-label">&thinsp;Carousel slides.</span>
-          <button class="rerun-btn" id="rerun-carousel" onclick="rerunSection('carousel')">&#8635;</button>
-        </div>
-        <p class="carousel-note">Six 1080&times;1080px SVGs. Open in Figma or Illustrator&thinsp;&mdash;&thinsp;adjust any text reflow&thinsp;&mdash;&thinsp;export as PDF, upload to LinkedIn as a swipeable carousel. Plus Jakarta Sans must be installed locally for Figma; browser rendering loads it from Google Fonts.</p>
-        <div class="carousel-controls">
-          <button class="dl-all-btn" onclick="downloadAllSlides()">&#8595; Download all six</button>
-        </div>
-        <div class="slide-grid" id="slide-grid"></div>
-      </div>
-
-      <div class="gaps-block">
-        <div class="gaps-eyebrow">Gaps &amp; Boosts</div>
-        <div class="gaps-text" id="gaps-out"></div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ─── INPUT DOCK ─── -->
-  <div class="input-dock" id="input-dock">
-    <div class="dump-header" id="dump-header" onclick="expandDump()">
-      <span class="dump-label">the download.</span>
-      <span class="dump-meta">
-<span class="saved-flash" id="saved-flash">Saved</span>
-      </span>
-      <button class="expand-toggle" id="expand-toggle" aria-label="Toggle input" onclick="toggleDump(event)">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="4,12 9,7 14,12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-    <textarea id="dump" placeholder="What did you just ship? What was broken? What did you decide? Five minutes. Messy is fine. Stream of consciousness is fine."></textarea>
-    <div class="dump-controls">
-      <button class="demo-btn" id="demo-btn" onclick="runDemo()">Try demo</button>
-      <button class="generate-btn" id="generate-btn" onclick="generate()">Run debrief</button>
-    </div>
-    <p class="run-note">try demo runs a baked-in example, no key needed. run debrief calls Claude live from your browser and needs your own Anthropic API key. the key stays in your browser and never touches a server.</p>
-  </div>
-
-  <!-- ─── API FOOTER ─── -->
-  <div class="api-footer">
-    <span class="api-label">Anthropic API key</span>
-    <input type="password" id="api-key-input" placeholder="sk-ant-..." />
-    <button class="api-save" onclick="saveKey()">Save</button>
-  </div>
-
-  <script>
-    const SYSTEM_PROMPT = `
-You are the Build Debrief Specialist. You work for one person: Jodi Paige-Lee, an Intelligence Layer Designer who builds behavioral AI systems and ships them mostly in silence.
-
-Your job runs in a 48-hour window. The moment Jodi finishes a build session, she knows exactly what she just proved: the behavioral decision, the architectural tradeoff, the thing that makes her work different from what most AI builders ship. That clarity decays fast. You exist to catch it before it goes flat and convert it into five outputs she can actually use.
-
-You are not a content assistant. You are not a LinkedIn ghostwriter. You are a translator standing between a hot build insight and a cold blank page.
-
-─────────────────────────────────────────────
-WHAT YOU UNDERSTAND ABOUT HER WORK
-─────────────────────────────────────────────
-
-Jodi designs how AI systems behave and decide, not just how they look. That sentence is the spine of everything she does. When she hands you a brain dump, your first job is to find the behavioral or architectural decision inside it and pull it forward, because that decision is the asset. A UI choice is not the story. A persona's escalation logic is.
-
-Her real vocabulary (use only when the build demonstrates it):
-
-"The LLM labels what it sees; the math decides the outcome." Her core technical differentiator. When a build involves a model classifying and code computing the verdict, that separation is the insight. Name it.
-
-Intelligence layer design. A practice she named. The design layer between raw model capability and a system that behaves reliably under real-world conditions.
-
-Behavioral architecture. Persona logic, confidence thresholds, escalation paths, refusal design, human-in-the-loop checkpoints, "never false consensus."
-
-Deterministic guardrails over a probabilistic core. Survivability caps, confidence floors, held-out benchmark evaluators. The pattern where she refuses to let an LLM's vibe be the final word.
-
-Math-first architecture. Code computes the decision; the LLM supplies labels into that computation.
-
-Her real builds you can reference:
-
-Opportunity Workbench. Adversarial scoring, three evaluator personas, a deterministic survivability cap, a confidence floor, a held-out benchmark evaluator.
-
-Mini Job Fit Scanner. Math-first: the LLM labels, the code computes the verdict. Her cleanest expression of the differentiator.
-
-Ravvel. A five-agent sequential travel-planning pipeline with a cascading-rerun harness. "Never false consensus" conflict-resolution principle.
-
-A four-persona AI hub for a higher-ed client. Intent classification, confidence thresholds, safety guardrails. CLIENT IS UNDER NDA — see NDA section below.
-
-An agricultural insurance system. A 45-minute workflow cut to 5 minutes, 85% adoption.
-
-Her background: Fashion illustration at Parsons. MFA from SVA. 20+ years across editorial and enterprise design before AI behavior. She thinks like a designer who learned to make systems decide. Invoke this lineage only when a build insight genuinely touches taste, restraint, legibility, or how a system feels to use.
-
-─────────────────────────────────────────────
-OPERATING CONTRACT (RULES)
-─────────────────────────────────────────────
-
-Every session you produce EXACTLY FIVE OUTPUTS, in this order, every session, no exceptions:
-1. LinkedIn post draft
-2. Portfolio case study outline
-3. Resume-ready sentence
-4. Pitch sentence
-5. Carousel slide content (JSON — rendered client-side into six 1080×1080px SVGs)
-
-Followed by a Gaps & Boosts section (2-4 bullets). Produce all five even when the dump is thin.
-
-RULE 1. FIND THE BEHAVIORAL DECISION FIRST.
-Before you write anything, locate the behavioral or architectural decision inside the dump. Not the feature. Not the UI. The decision about how the system behaves, decides, escalates, refuses, or hands off. That decision is the lead. Everything you produce orbits it.
-
-RULE 2. STRUCTURE HAPPENS IN THE CAPTURE.
-You never hand back a tidied dump. You hand back five finished structures.
-
-RULE 3. USE HER LANGUAGE, CORRECTLY.
-Use her real vocabulary only when the build actually demonstrates it. Misapplied jargon is worse than plain language.
-
-RULE 4. NEVER FABRICATE A METRIC. NEVER DISGUISE UNSHIPPED WORK. [HARD RULE]
-If she gave you a number, use it. If not, do not invent one. In-progress work must stay legibly in-progress. In the resume and pitch sentences: if an in-progress capability cannot be marked as in-progress inside the one line, it does not anchor that line.
-
-RULE 5. HONOR THE NDA. [HARD RULE]
-See NDA section below. Strip protected names automatically and note it in Gaps & Boosts.
-
-RULE 6. FLAG GAPS, DON'T FILL THEM.
-Gaps & Boosts: 2-4 bullets on what would strengthen the artifacts. Keep it honest.
-
-RULE 7. WRITE THE WAY SHE WRITES.
-Editorial. Precise. Unhurried. Claim first. Teach one thing. No em-dashes. No throat-clearing. Flat declaratives. Short sentences. 120 words default, up to ~250 only when warranted.
-
-─────────────────────────────────────────────
-OUTPUT TEMPLATES
-─────────────────────────────────────────────
-
-1. LINKEDIN POST DRAFT
-Claim-first opening. One idea taught. Sharp but warm, aimed at a pattern not a person. No em-dashes. Disciplined hashtags or none. 120 words by default. Anonymized per Rule 5.
-
-2. PORTFOLIO CASE STUDY OUTLINE
-- Problem:         [the failure mode or gap the build addressed]
-- Decision:        [the behavioral or architectural choice she made]
-- Constraint:      [the hard limit she designed around]
-- System behavior: [what the system actually does now]
-- Evidence:        [proof it works: real metric, test, explainability. Never fabricated.]
-- Outcome:         [what changed, or the failure mode eliminated]
-
-3. RESUME-READY SENTENCE
-One sentence. Action verb, the decision, the outcome. No metric unless real.
-
-4. PITCH SENTENCE
-"This is how I think: [the judgment the build reveals]."
-
-─────────────────────────────────────────────
-VOICE GUIDE
-─────────────────────────────────────────────
-
-Her best line: "systems people can trust because they can see the receipts, not just because the AI sounds confident." Write at that level.
-
-TWO FAILURE MODES: Insecurity ("Really excited to share") and Bragging (pointing at herself). Fix: state what the work does in flat declaratives.
-
-CLAIM FIRST. First sentence is the idea or the decision.
-TEACH ONE THING. One idea per post.
-SHOW ONE MOMENT. Ground proof in a concrete scene. State the central idea once, sharply. No abstract-rephrase loop.
-AIM AT PATTERNS, NOT PEOPLE.
-
-SENTENCE-LEVEL:
-- Short beats long
-- No em-dashes — use a period, colon, or semicolon
-- Concrete nouns over abstract ones
-- Flat declaratives carry weight
-
-KILL LIST: "Really excited to," "thrilled to," "humbled to," "The result?", "Thoughts?", hashtag piles.
-
-GRATITUDE: Sincere, specific, never leading.
-
-HOOKS earn the next line. Name a tension or refusal.
-
-CTA: Invite a specific peer reply. Not generic engagement.
-
-LENGTH: Default 120 words. Up to 250 when warranted. Never pad.
-
-─────────────────────────────────────────────
-VOICE SAMPLES — HIGHEST AUTHORITY
-─────────────────────────────────────────────
-
-When sample and guideline disagree, follow the sample.
-
-Sample A (Job-Fit explainer):
-"LLMs are most useful when they're helping us interpret information. Not when they're making the final decision. That's what I kept coming back to while building Job-Fit: a screener built to show its work, not just its verdict. Most AI scoring systems focus on the outcome: A score, a ranking, a recommendation. I was more interested in the process. So I split the job. The LLM extracts the context. It reads the resume and the job description, then classifies what it finds: required skills, preferred skills, proof points, gaps, and screening risks. That's the work I trust it to do. The code handles the math. The model never touches the final score. Deterministic rules compute the recommendation based on the evidence the LLM extracted. Same inputs, same answer. The result is a system where every recommendation traces back to specific evidence. Not a number floating in midair. The model labels the evidence. The rules compute the outcome. That boundary is the whole design."
-
-Sample B (Job-Fit announcement):
-"Most match scores give you a number and expect you to trust it. That was the problem I built Job-Fit to solve. Job-Fit reads a job posting and a resume, then tells you whether to apply, where you may get screened out, and what to fix before you do. The important part is how it makes the decision. The LLM does not pick the score. It labels the evidence. The code makes the call. The model extracts what the job is asking for and what the resume actually shows. Then deterministic rules compute the verdict. Same inputs. Same answer. Every time. I built it to test whether I could design an AI system that stays honest in a domain I understand well. Not 'trust me, the AI said so.' More like: here are the receipts, here is the rule, here is the outcome."
-
-─────────────────────────────────────────────
-NDA — PROTECTED NAMES [HARD RULE — overrides everything]
-─────────────────────────────────────────────
-
-If the dump contains any protected client names, NDA'd institution names, persona names, or former employer names that should stay private, anonymize them in all public-facing outputs. Use neutral framings: "a higher-ed client," "four distinct personas," "an enterprise AI platform," "a prior role." Flag in Gaps & Boosts that anonymization was applied.
-
-Note: This interface does not have access to the local NDA reference file. Apply judgment — if a name in the dump looks like a client, institution, or persona name that would not appear on a public resume, treat it as protected and flag it.
-
-─────────────────────────────────────────────
-RESPONSE FORMAT — use these exact delimiters
-─────────────────────────────────────────────
-
-===LINKEDIN===
-[post text]
-===CASESTUDY===
-[outline with - labels]
-===RESUME===
-[one sentence]
-===PITCH===
-[one sentence starting "This is how I think:"]
-===GAPS===
-[2-4 bullet lines starting with -]
-===SLIDES===
-[A JSON array of exactly 6 slide objects. Pure JSON only. No markdown fences, no preamble, no explanation.
-All text follows NDA Rule 5. Content derives from the LinkedIn and case study sections above.
-Respect line-length limits: headlines max 34 chars, body lines max 46 chars.
-
-Slide 01 hook:       {"id":"01","label":"hook.","h1":"[≤34 chars]","h2":"[≤34 chars or empty str]","support":"[≤46 chars]","illus":"score_dots"}
-Slide 02 problem:    {"id":"02","label":"the problem.","h1":"[≤34 chars]","h2":"[≤34 chars or empty]","bhl":"[highlighted 1st sentence ≤46 chars]","brest":"[remaining ≤80 chars]","illus":"three_circles"}
-Slide 03 decision:   {"id":"03","label":"the decision.","h1":"...","h2":"...","bhl":"...","brest":"...","illus":"compass"}
-Slide 04 principle:  {"id":"04","label":"the principle.","h1":"...","h2":"...","bhl":"...","brest":"...","illus":"blob_vs_rect"}
-Slide 05 evidence:   {"id":"05","label":"the evidence.","h1":"...","h2":"...","bhl":"...","brest":"...","illus":"receipt"}
-Slide 06 CTA:        {"id":"06","label":"your turn.","h1":"[≤34 chars]","h2":"[≤34 chars or empty]","h3":"[≤34 chars or empty]","h4":"","illus":"arrow"}
-
-Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { ... } ]
-]
-===END===
-`;
-
-    function saveKey() {
-      const val = document.getElementById('api-key-input').value.trim();
-      if (!val) return;
-      localStorage.setItem('debrief_api_key', val);
-      flash('saved-flash');
-    }
-
-    function getKey() {
-      return document.getElementById('api-key-input').value.trim()
-          || localStorage.getItem('debrief_api_key')
-          || '';
-    }
-
-    let lastDump = '';
-    const dumpEl  = document.getElementById('dump');
-    let saveTimer;
-
-    dumpEl.addEventListener('input', () => {
-      clearTimeout(saveTimer);
-      // auto-resize — max clamp depends on focus state
-      const maxH = (document.activeElement === dumpEl) ? 480 : 220;
-      dumpEl.style.height = 'auto';
-      dumpEl.style.height = Math.min(dumpEl.scrollHeight, maxH) + 'px';
-    });
-
-    dumpEl.addEventListener('focus', () => {
-      if (!document.getElementById('input-dock').classList.contains('collapsed')) {
-        const current = dumpEl.offsetHeight;
-        if (current < 250) dumpEl.style.height = '250px';
-      }
-    });
-
-    dumpEl.addEventListener('blur', () => {
-      dumpEl.style.height = 'auto';
-      dumpEl.style.height = Math.min(dumpEl.scrollHeight, 220) + 'px';
-    });
-
-    window.addEventListener('load', () => {
-      const k = localStorage.getItem('debrief_api_key');
-      if (k) document.getElementById('api-key-input').value = k;
-    });
-
-    // ═══════════════════════════════════════════
-    // LOADING STATE — cycling status lines (Jodi's voice)
-    // ═══════════════════════════════════════════
-    const LOADING_LINES = [
-      "finding the decision",
-      "pulling the angle forward",
-      "catching it before it dulls",
-      "holding the line"
-    ];
-    let loadingTimer = null;
-
-    // ═══════════════════════════════════════════
-    // DEMO MODE — Example 1 (Opportunity Workbench)
-    // Real folder content, baked in so the app can be
-    // tried with no API key. Runs through the same
-    // parseAndRender pipeline as a live generation.
-    // ═══════════════════════════════════════════
-    const DEMO_INPUT = `okay just shipped the survivability cap thing in the workbench finally. so the problem was the three evaluator personas would sometimes all be kind of generous and a job that was actually a terrible fit would still float up with like a 7/10 because no single persona killed it. each one found something to like. and that's exactly the false-positive thing I keep saying I hate. so I added a deterministic cap, before the personas even score, code checks a few hard disqualifiers, like if the role requires a credential she flatly doesn't have or it's onsite in a city she can't be in, and if any of those trip, the score is capped at like a 3 no matter what the LLM personas say. so the personas can be as generous as they want and the math still refuses to let a non-survivable job look survivable. this is the thing, the LLM labels what it sees but the math decides. the personas are good at nuance, terrible at hard limits. code is the opposite. so I let each do what it's good at. also added a little note in the UI explaining WHY a job got capped so it's not a black box. feels clean. this is the most "me" the workbench has felt.`;
-
-    const DEMO_PAYLOAD = `===LINKEDIN===
-My job-fit scorer kept rating bad-fit roles a 7 out of 10. The fix was not a better prompt.
-
-Three evaluator personas each found something to like in every role. Individually reasonable. Together, they let non-survivable jobs float to the top. That is the false positive I keep designing against.
-
-So I stopped asking the model to enforce hard limits. A deterministic layer now checks the disqualifiers before the personas score. If one trips, the score is capped, no matter how generous the personas get. The personas label what they see. The math decides what survives.
-
-Personas are built for nuance and bad at hard limits. Code is the reverse. I let each do only the job it is good at, and I put the boundary between them where the reliability lives. Every cap shows its reason in the UI, so it is never a black box.
-
-If you build with LLMs: where in your system are you letting the model decide something the math should be deciding?
-===CASESTUDY===
-- Problem: Three evaluator personas were each generous enough that bad-fit roles surfaced at 7/10. No single persona killed a non-survivable role, so the false positive slipped through.
-- Decision: Move hard-limit enforcement out of the LLM personas and into a deterministic layer that runs before they score.
-- Constraint: Personas are strong at nuance and weak at hard limits. They had to stay free to be generous without letting a non-survivable role look survivable.
-- System behavior: Code checks hard disqualifiers before scoring. If one trips, the score is capped regardless of what the personas say. The LLM labels, the math decides.
-- Evidence: Every cap shows its reason in the UI, so the verdict is explainable rather than a black box. (No quantified false-positive reduction yet.)
-- Outcome: Eliminated the failure mode where individually generous personas let bad-fit roles reach the top of the list.
-===RESUME===
-Engineered a deterministic guardrail layer over a multi-persona LLM scoring system, separating model judgment (labeling) from hard-limit enforcement (computation) to eliminate false positives in automated fit assessment.
-===PITCH===
-This is how I think: I do not trust an LLM to enforce a hard limit, so I design the system so the model labels and the math decides, and the boundary between those two jobs is where the reliability lives.
-===GAPS===
-- No metric here yet. If you can quantify the false-positive reduction (for example, "X% of capped roles were previously scoring 6+"), the portfolio outline gets materially stronger.
-- The opening line is strong. Your real voice on "the fix was not a better prompt" could sharpen it further when you trim.
-- This is a baked-in demo run (Example 1, Opportunity Workbench), shown without an API key. Add your key and run a real debrief for live output.
-===SLIDES===
-[
-  {"id":"01","label":"hook.","h1":"My job-fit scorer kept rating","h2":"bad-fit roles a 7 out of 10.","support":"The fix was not a better prompt.","illus":"score_dots"},
-  {"id":"02","label":"the problem.","h1":"Three personas, each generous.","h2":"","bhl":"No single persona killed a bad-fit role.","brest":"Together they let non-survivable jobs float to the top.","illus":"three_circles"},
-  {"id":"03","label":"the decision.","h1":"Move hard limits out of the model.","h2":"","bhl":"A deterministic layer checks first.","brest":"If one trips, the score is capped no matter how generous the personas get.","illus":"compass"},
-  {"id":"04","label":"the principle.","h1":"The LLM labels. The math decides.","h2":"","bhl":"Personas are built for nuance,","brest":"bad at hard limits. Code is the reverse. Each does only the job it is good at.","illus":"blob_vs_rect"},
-  {"id":"05","label":"the evidence.","h1":"Every cap shows its reason.","h2":"","bhl":"The verdict is explainable, not a black box.","brest":"No quantified false-positive reduction yet.","illus":"receipt"},
-  {"id":"06","label":"your turn.","h1":"Where are you letting the model","h2":"decide something the math","h3":"should be deciding?","h4":"","illus":"arrow"}
-]
-===END===`;
-
-    function runDemo() {
-      dumpEl.value = DEMO_INPUT;
-      lastDump = DEMO_INPUT;
-      setLoading(true);
-      setTimeout(() => { parseAndRender(DEMO_PAYLOAD); }, 8000);
-    }
-
-    async function generate() {
-      const dump   = dumpEl.value.trim();
-      const apiKey = getKey();
-
-      if (!dump)   { alert('Add a brain dump first.'); return; }
-      if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
-
-      lastDump = dump;
-      setLoading(true);
-
-      try {
-
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-          },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 4096,
-            system: SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: dump }],
-          }),
-        });
-
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({}));
-          throw new Error(err.error?.message || `HTTP ${response.status}`);
-        }
-
-        const data = await response.json();
-        parseAndRender(data.content[0].text);
-
-      } catch (err) {
-        setLoading(false);
-        alert(`Something went wrong: ${err.message}`);
-      }
-    }
-
-    // ═══════════════════════════════════════════
-    // PUBLISH GATE - deterministic checks (code, not the model)
-    // The model writes the draft. This code decides if it is publish-ready.
-    // Real NDA names stay local; "Northwind Realty" is the demo trap name.
-    // ═══════════════════════════════════════════
-    const PUBLISH_PROTECTED = ['Northwind Realty'];
-    const KILL_LIST = ['really excited','excited to share','thrilled to','humbled to',"i'm excited",'the result?','thoughts?'];
-
-    // One definition of "unbacked number," used by both the publish gate and the
-    // honesty check so the two can never disagree. Exact token match, not substring:
-    // a substring test lets a fabricated "85%" pass whenever the dump happens to
-    // contain "1850," which would make the no-fabricated-metric claim untrue.
-    function unbackedNumbers(text, dump) {
+  
+body{background:var(--paper);font-family:var(--sans);padding:40px;}
+.wrap{display:flex;gap:36px;flex-wrap:wrap;max-width:1000px;}
+.col{background:#F5F2EC;border:1px solid var(--paper-rule);border-radius:6px;padding:22px;width:400px;}
+.col h3{font:600 11px var(--sans);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 16px;}
+#gaps-out{display:none;}
+</style></head><body>
+<div id="gaps-out">- Client name and institution type are anonymized per NDA protocol. Confirm this matches your disclosure agreement.
+- The 40 percent figure and the 45-to-85 percent adoption lift are treated as real metrics per your dump. Confirm both are cleared for public use.
+- The case study notes the model could not be retrained as the constraint. If that is not accurate, correct it.
+- What does the clarifying question actually do behaviorally? Worth one sentence.</div>
+<div class="wrap">
+<div class="col"><h3>Passing</h3><div id="gate-panel"></div></div>
+<div class="col"><h3>Blocked</h3><div id="g2"></div></div></div>
+<script>const PUBLISH_PROTECTED = ['Northwind Realty'];
+const KILL_LIST = ['really excited','excited to share','thrilled to','humbled to',"i'm excited",'the result?','thoughts?'];
+function unbackedNumbers(text, dump) {
       const backed = new Set(((dump || '').replace(/,/g,'').match(/\d+(?:\.\d+)?/g) || []));
       const used   = ((text || '').replace(/,/g,'').match(/\d+(?:\.\d+)?%?/g) || []);
       return [...new Set(used.filter(n => !backed.has(n.replace('%',''))))];
     }
-
-    function runPublishGate(draft, dump) {
+function runPublishGate(draft, dump) {
       draft = draft || ''; dump = (dump || '');
       const low = draft.toLowerCase();
       const out = [];
@@ -1144,16 +703,23 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
 
       return out;
     }
-
-    function esc(s) {
+function esc(s) {
       return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     }
-
-    function renderGate(results) {
+function renderGate(results) {
       const panel = document.getElementById('gate-panel');
       const fails = results.filter(r => r.status === 'fail').length;
       const pip = { pass:'\u2713', fail:'\u2717', flag:'!' };
-      const verdict = fails ? (fails === 1 ? '1 thing to fix' : fails + ' things to fix') : 'Clear to publish';
+      const verdict = fails
+        ? (fails === 1 ? '1 check failed' : fails + ' checks failed')
+        : 'Passes all ' + results.length + ' checks';
+
+      // Count unresolved Gaps items so the scope line is specific, not decorative.
+      const gapsEl = document.getElementById('gaps-out');
+      const gapsTxt = gapsEl ? (gapsEl.textContent || '') : '';
+      const openQs = gapsTxt && gapsTxt !== '(not found)'
+        ? gapsTxt.split('\n').filter(l => l.trim().startsWith('-')).length
+        : 0;
 
       const rows = results.map(r => {
         const row = '<div class="gate-row is-' + r.status + '">'
@@ -1169,477 +735,28 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       panel.innerHTML =
         '<div class="gate-eyebrow">Publish gate &middot; the math decides</div>'
         + '<div class="gate-verdict ' + (fails ? 'is-blocked' : 'is-clear') + '">' + verdict + '</div>'
+        + '<div class="gate-scope"><b>Not checked:</b> whether anything you told it is true. '
+        + 'The gate compares the draft to your brain download, not to reality.'
+        + (openQs ? ' <b>' + openQs + ' open question' + (openQs === 1 ? '' : 's') + '</b> in Gaps &amp; Boosts.' : '')
+        + '</div>'
         + rows;
       panel.style.display = 'block';
     }
+const DUMP="shipped the confidence threshold work for the university client. the intent classifier routed everything above 0.5 straight to an answer, about 40 percent of escalation cases were getting answered instead of handed off. moved the threshold to 0.8 and added a band between 0.6 and 0.8. adoption went from 45 percent to 85 percent over three weeks.";
+const OK=`A classifier can be certain about its label and the system should still be uncertain about acting on it.
 
-    // Honesty checks: the two non-negotiable rules (NDA + no fabricated number),
-    // applied to the resume and pitch lines because they travel without context.
-    function honestyChecks(text, dump) {
-      text = text || ''; dump = (dump || '');
-      const low = text.toLowerCase();
-      const name = PUBLISH_PROTECTED.filter(n => low.includes(n.toLowerCase()));
-      const stray = unbackedNumbers(text, dump);
-      return { name, stray };
-    }
+That distinction drove a threshold change I shipped this week for a higher-ed client. The intent classifier was routing everything above 0.5 straight to an answer. About 40 percent of cases that needed a human advisor were getting answered instead of handed off. Adoption sat at 45 percent. Advisors had stopped trusting it.
 
-    function renderHonesty(noteId, text) {
-      const note = document.getElementById(noteId);
-      if (!text || text === '(not found)') { note.style.display = 'none'; return; }
-      const r = honestyChecks(text, (typeof lastDump !== 'undefined' ? lastDump : ''));
-      const row = (ok, okTxt, badTxt) =>
-        '<div class="honesty-row ' + (ok ? 'is-pass' : 'is-fail') + '"><span class="hp">'
-        + (ok ? '\u2713' : '\u2717') + '</span><span>' + esc(ok ? okTxt : badTxt) + '</span></div>';
-      note.innerHTML =
-        '<div class="honesty-eyebrow">Honesty check</div>'
-        + row(!r.name.length, 'no protected client name', 'protected name: remove ' + r.name.join(', '))
-        + row(!r.stray.length, 'no unbacked number', 'number not in dump: check ' + r.stray.join(', '));
-      note.style.display = 'block';
-    }
+The fix was not a better model. It was a product decision about who gets to be wrong.
 
-    function runGateUI() {
-      const d = document.getElementById('linkedin-out').textContent || '';
-      if (!d || d === '(not found)') { document.getElementById('gate-panel').style.display = 'none'; return; }
-      renderGate(runPublishGate(d, (typeof lastDump !== 'undefined' ? lastDump : '')));
-    }
+I moved the threshold to 0.8 and added a band between 0.6 and 0.8 where the system asks a clarifying question instead of acting. Adoption reached 85 percent over three weeks.
 
-    function parseAndRender(raw) {
-      const get = (start, end) => {
-        const re = new RegExp(`===\\s*${start}\\s*===([\\s\\S]*?)===\\s*${end}\\s*===`);
-        const m  = raw.match(re);
-        return m ? m[1].trim() : '';
-      };
+A confidence threshold is not a model setting. It is a decision about when the system has earned the right to act.
 
-      document.getElementById('linkedin-out').textContent  = get('LINKEDIN',  'CASESTUDY') || '(not found)';
-      document.getElementById('casestudy-out').textContent = get('CASESTUDY', 'RESUME')    || '(not found)';
-      document.getElementById('resume-out').textContent    = get('RESUME',    'PITCH')      || '(not found)';
-      document.getElementById('pitch-out').textContent     = get('PITCH',     'GAPS')       || '(not found)';
-      document.getElementById('gaps-out').textContent      = get('GAPS',      'SLIDES') || get('GAPS', 'END') || '(not found)';
-
-      runGateUI();
-      renderHonesty('resume-note', document.getElementById('resume-out').textContent);
-      renderHonesty('pitch-note', document.getElementById('pitch-out').textContent);
-
-      // ─── Carousel slides ───
-      const slidesRaw = get('SLIDES', 'END');
-      if (slidesRaw) {
-        try {
-          const clean = slidesRaw.replace(/```json|```/g, '').trim();
-          const slidesData = JSON.parse(clean);
-          if (Array.isArray(slidesData) && slidesData.length === 6) {
-            renderSlides(slidesData);
-          }
-        } catch(e) {
-          console.warn('Slide JSON parse failed:', e);
-          document.getElementById('carousel-block').style.display = 'none';
-        }
-      }
-
-      setLoading(false);
-      document.getElementById('rerun-all-btn').style.display = 'block';
-      document.getElementById('new-dump-btn').style.display = 'block';
-      collapseDump();
-      document.getElementById('output-empty').style.display  = 'none';
-      document.getElementById('output-sections').classList.add('visible');
-      document.getElementById('output-wrap').scrollTop = 0;
-    }
-
-
-    // ═══════════════════════════════════════════
-    // SVG GENERATION ENGINE
-    // ═══════════════════════════════════════════
-    const SF  = "'Plus Jakarta Sans', Arial, sans-serif";
-    const SY  = '#F5CC38';   // yellow
-    const SBK = '#111111';   // black
-    const SDG = '#555555';   // dark grey body
-    const SMG = '#333333';   // medium grey labels
-    const SLG = '#737373';   // light grey (slide num, footer)
-    const SRL = '#E2E2E2';   // rule lines
-
-    function esc(t) {
-      return String(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    }
-
-    function sHdr(n) {
-      return `  <text x="72" y="116" font-family="${SF}" font-size="32" font-weight="400" fill="${SLG}" letter-spacing="7">0${n} / 06</text>
-  <line x1="275" y1="108" x2="1008" y2="108" stroke="${SRL}" stroke-width="1"/>`;
-    }
-    function sFtr() {
-      return `  <line x1="72" y1="965" x2="1008" y2="965" stroke="${SRL}" stroke-width="1"/>
-  <text x="72" y="1002" font-family="${SF}" font-size="30" font-weight="400" fill="${SLG}" letter-spacing="4">jodi paige-lee</text>`;
-    }
-    function sLbl(t) {
-      return `  <text x="72" y="385" font-family="${SF}" font-size="30" font-weight="600" fill="${SMG}" letter-spacing="5">${esc(t.toUpperCase())}</text>`;
-    }
-    function sHl(y, w) {
-      return `  <rect x="68" y="${y-30}" width="${Math.min(w,930)}" height="44" rx="3" fill="${SY}" fill-opacity="0.65"/>`;
-    }
-    function sTx(t, x, y, sz=36, wt='400', fill=SDG) {
-      return `  <text x="${x}" y="${y}" font-family="${SF}" font-size="${sz}" font-weight="${wt}" fill="${fill}">${esc(t)}</text>`;
-    }
-    function sWrap(body) {
-      return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1080" viewBox="0 0 1080 1080"><defs><style>@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;600&amp;display=swap');</style></defs><rect width="1080" height="1080" fill="#FFFFFF"/>
-${body}
-</svg>`;
-    }
-
-    function wrapTx(text, maxCh) {
-      if (!text) return [];
-      if (text.length <= maxCh) return [text];
-      const words = text.split(' ');
-      const lines = []; let cur = '';
-      for (const w of words) {
-        const next = cur ? cur+' '+w : w;
-        if (next.length <= maxCh) { cur = next; }
-        else { if (cur) lines.push(cur); cur = w; }
-      }
-      if (cur) lines.push(cur);
-      return lines.slice(0, 3);
-    }
-
-   function getIllus(type) {
-      const b = SBK;
-      const yl = SY;
-      const map = {
-        // Slide 1 Hook: sliders (512×512)
-        score_dots: `
-          <svg x="820" y="130" width="168" height="168" viewBox="0 0 512 512">
-            <path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM64 288c0-17.7 14.3-32 32-32H448c17.7 0 32 14.3 32 32s-14.3 32-32 32H96c-17.7 0-32-14.3-32-32zM384 416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H384zM128 64c0-17.7 14.3-32 32-32s32 14.3 32 32V128c0 17.7-14.3 32-32 32s-32-14.3-32-32V64zm192 192c0-17.7 14.3-32 32-32s32 14.3 32 32v64c0 17.7-14.3 32-32 32s-32-14.3-32-32V256z" fill="${b}"/>
-            <circle cx="160" cy="96" r="28" fill="${yl}"/>
-          </svg>`,
-
-        // Slide 2 Problem: triangle warning (512×512)
-        three_circles: `
-          <svg x="820" y="130" width="168" height="168" viewBox="0 0 512 512">
-            <path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .3-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z" fill="${b}"/>
-          </svg>`,
-
-        // Slide 3 Decision: bolt (256×512 natural coords)
-        compass: `
-          <svg x="862" y="130" width="84" height="168" viewBox="0 0 256 512">
-            <path d="M0 256L28.5 28c2-16 15.6-28 31.8-28H224c16.3 0 30.2 12.5 31.7 28.7l23 240.3c1.4 14.7-8.1 28.2-22.3 31.4L160 320l48 192L32 288l80-32L0 256z" fill="${b}"/>
-            <circle cx="140" cy="120" r="24" fill="${yl}"/>
-          </svg>`,
-
-        // Slide 4 Principle: code-branch (448×512 natural coords)
-        blob_vs_rect: `
-          <svg x="830" y="130" width="147" height="168" viewBox="0 0 448 512">
-            <path d="M432 96a48 48 0 1 0 -96 0 48 48 0 1 0 96 0zM320 96c0 31.3 15 59.1 38.2 77.1L273 293c-6.8 6.8-10 16-10 25.5V416c14.9 0 29.1 5.9 39.6 16.4l113 113c12.5 12.5 32.8 12.5 45.3 0l113-113c10.5-10.5 16.4-24.7 16.4-39.6V224c0-23.7-10.3-45-26.7-60.1l-66.2-61.1C320.3 98.7 320 97.4 320 96zM96 224a48 48 0 1 0 0-96 48 48 0 1 0 0 96zm48 32c23.7 0 45-10.3 60.1-26.7l61.1 66.2c-1.3 3.3-2.2 6.8-2.2 10.5v14c0 13.3 10.7 24 24 24h14c13.3 0 24-10.7 24-24V320c0-13.3-10.7-24-24-24H266c-13.3 0-24 10.7-24 24v11.4l-57.1-61.9c18.2-18 29.2-43.1 29.2-70.9c0-53-43-96-96-96S0 144 0 197s43 96 96 96c17.8 0 34.5-4.8 48-13.2V256z" fill="${b}"/>
-            <circle cx="384" cy="96" r="24" fill="${yl}"/>
-          </svg>`,
-
-        // Slide 5 Evidence: file-invoice (384×512 natural coords)
-        receipt: `
-          <svg x="841" y="130" width="126" height="168" viewBox="0 0 384 512">
-            <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V288H216c-13.3 0-24 10.7-24 24v16H120c-13.3 0-24 10.7-24 24v16H0V64zm384 128V160H256V64H384v128zM160 384h64v64H160V384zm96 0h64v64H256V384zm96 0h32c17.7 0 32 14.3 32 32v32c0 17.7-14.3 32-32 32H352V384zM0 352H64v64H0V352zm96 0h32v64H96V352z" fill="${b}"/>
-            <rect x="64" y="64" width="96" height="24" fill="${yl}"/>
-          </svg>`,
-
-        // Slide 6 CTA: circle-arrow-right (512×512)
-        arrow: `
-          <svg x="820" y="130" width="168" height="168" viewBox="0 0 512 512">
-            <path d="M0 256a256 256 0 1 0 512 0A256 256 0 1 0 0 256zM281 385c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l71-71L120 280c-13.2 0-24-10.8-24-24s10.8-24 24-24l198.1 0-71-71c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0L393 239c9.4 9.4 9.4 24.6 0 33.9L281 385z" fill="${b}"/>
-          </svg>`
-      };
-      return map[type] || map.arrow;
-    }
-
-    function buildSlide(s, n) {
-      const parts = [sHdr(n), getIllus(s.illus || 'arrow'), sLbl(s.label || '')];
-
-      if (n === 1) {
-        // Hook: headline + optional supporting line
-        const h1 = wrapTx(s.h1||'', 34);
-        const h2 = s.h2 ? [s.h2] : [];
-        const hl = [...h1,...h2];
-        hl.forEach((ln,i) => parts.push(sTx(ln, 72, 447+i*72, 52, '600', SBK)));
-        if (s.support) {
-          const supY = 447 + hl.length*72 + 24;
-          parts.push(sTx(s.support, 72, supY, 36, '300', SDG));
-        }
-      } else if (n === 6) {
-        // CTA: up to 4 headline lines
-        [s.h1,s.h2,s.h3,s.h4].filter(Boolean).forEach((ln,i) =>
-          parts.push(sTx(ln, 72, 447+i*72, 52, '600', SBK))
-        );
-      } else {
-        // Slides 02–05: headline + highlighted body + rest
-        const h1 = wrapTx(s.h1||'', 34);
-        const h2 = s.h2 ? [s.h2] : [];
-        const hl = [...h1,...h2];
-        hl.forEach((ln,i) => parts.push(sTx(ln, 72, 447+i*72, 52, '600', SBK)));
-        let by = 447 + hl.length*72 + 28;
-
-        if (s.bhl) {
-          const bLines = wrapTx(s.bhl, 46);
-          const hw = Math.min(bLines[0].length*17, 930);
-          parts.push(sHl(by, hw));
-          parts.push(sTx(bLines[0], 72, by, 36, '400', SBK));
-          by += 58;
-          if (bLines[1]) { parts.push(sTx(bLines[1], 72, by, 36, '400', SDG)); by += 58; }
-        }
-        if (s.brest) {
-          wrapTx(s.brest, 46).forEach((ln,i) => {
-            if (by + i*54 < 900) parts.push(sTx(ln, 72, by+i*54, 36, '300', SDG));
-          });
-        }
-      }
-      parts.push(sFtr());
-      return sWrap(parts.join('\n'));
-    }
-
-    // ─── Carousel render & download ───
-    let _svgs = [];
-
-    function renderSlides(slidesData) {
-      _svgs = slidesData.map((s, i) => buildSlide(s, i+1));
-      const grid = document.getElementById('slide-grid');
-      grid.innerHTML = '';
-      const labels = ['hook.','the problem.','the decision.','the principle.','the evidence.','your turn.'];
-      _svgs.forEach((svg, i) => {
-        const dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-        const thumb = document.createElement('div');
-        thumb.className = 'slide-thumb';
-
-        const img = document.createElement('img');
-        img.src = dataUrl;
-        img.alt = `Slide ${i+1}`;
-
-        const footer = document.createElement('div');
-        footer.className = 'slide-thumb-footer';
-
-        const lbl = document.createElement('span');
-        lbl.className = 'slide-thumb-lbl';
-        lbl.textContent = `0${i+1} — ${labels[i]}`;
-
-        const dlBtn = document.createElement('button');
-        dlBtn.className = 'slide-dl-btn';
-        dlBtn.textContent = '↓ svg';
-        const captured = svg;
-        const idx = i+1;
-        dlBtn.onclick = () => dlSVG(captured, `carousel-0${idx}.svg`);
-
-        footer.appendChild(lbl);
-        footer.appendChild(dlBtn);
-        thumb.appendChild(img);
-        thumb.appendChild(footer);
-        grid.appendChild(thumb);
-      });
-      document.getElementById('carousel-block').style.display = 'block';
-    }
-
-    function dlSVG(svgStr, filename) {
-      const blob = new Blob([svgStr], { type: 'image/svg+xml' });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href = url; a.download = filename;
-      document.body.appendChild(a); a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    }
-
-    function downloadAllSlides() {
-      _svgs.forEach((svg, i) => setTimeout(() => dlSVG(svg, `carousel-0${i+1}.svg`), i*250));
-    }
-
-
-
-    // ─── RERUN FUNCTIONS ───
-    const sectionConfig = {
-      linkedin:  { label: 'LinkedIn post draft',          start: 'LINKEDIN',  end: 'CASESTUDY', elId: 'linkedin-out',  mode: 'text'   },
-      casestudy: { label: 'portfolio case study outline', start: 'CASESTUDY', end: 'RESUME',     elId: 'casestudy-out', mode: 'text'   },
-      resume:    { label: 'resume-ready sentence',         start: 'RESUME',    end: 'PITCH',      elId: 'resume-out',    mode: 'text'   },
-      pitch:     { label: 'pitch sentence',                start: 'PITCH',     end: 'GAPS',       elId: 'pitch-out',     mode: 'text'   },
-      carousel:  { label: 'carousel slide content JSON',  start: 'SLIDES',    end: 'END',        elId: 'slide-grid',    mode: 'slides' },
-    };
-
-    function rerunAll() {
-      if (!lastDump) { alert('No previous dump to rerun.'); return; }
-      dumpEl.value = lastDump;
-      generate();
-    }
-
-    async function rerunSection(section) {
-      if (!lastDump) { alert('No previous dump to rerun from.'); return; }
-      const apiKey = getKey();
-      if (!apiKey) { alert('Add your Anthropic API key below.'); return; }
-
-      const cfg = sectionConfig[section];
-      if (!cfg) return;
-
-      // LinkedIn and carousel are the same social proof — run both at once
-      if (section === 'linkedin') rerunSection('carousel');
-
-      const btn = document.getElementById('rerun-' + section);
-      const el  = cfg.mode === 'text' ? document.getElementById(cfg.elId) : null;
-      const orig = el ? el.textContent : '';
-
-      if (btn) { btn.disabled = true; btn.textContent = '…'; }
-      if (el)  el.textContent = 'regenerating…';
-
-      const userMsg = `Generate ONLY the ${cfg.label}. Output ONLY using these exact delimiters and nothing else:\n===${cfg.start}===\n[your output]\n===${cfg.end}===\n\nBrain dump:\n${lastDump}`;
-
-      try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'anthropic-dangerous-direct-browser-access': 'true',
-          },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 1500,
-            system: SYSTEM_PROMPT,
-            messages: [{ role: 'user', content: userMsg }],
-          }),
-        });
-
-        if (!response.ok) {
-          const err = await response.json().catch(() => ({}));
-          throw new Error(err.error?.message || 'HTTP ' + response.status);
-        }
-
-        const data = await response.json();
-        const raw  = data.content[0].text;
-        const re   = new RegExp('===\\s*' + cfg.start + '\\s*===([\\s\\S]*?)===\\s*' + cfg.end + '\\s*===');
-        const m    = raw.match(re);
-        const result = m ? m[1].trim() : raw.trim();
-
-        if (cfg.mode === 'text' && el) {
-          el.textContent = result;
-          if (section === 'linkedin') runGateUI();
-          if (section === 'resume') renderHonesty('resume-note', result);
-          if (section === 'pitch')  renderHonesty('pitch-note', result);
-        } else if (cfg.mode === 'slides') {
-          try {
-            const clean = result.replace(/```json|```/g, '').trim();
-            const slidesData = JSON.parse(clean);
-            if (Array.isArray(slidesData) && slidesData.length === 6) renderSlides(slidesData);
-          } catch(e) { console.warn('Carousel rerun JSON parse failed:', e); }
-        }
-      } catch(err) {
-        if (el) el.textContent = orig;
-        alert('Rerun failed: ' + err.message);
-      } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '\u21BB'; }
-      }
-    }
-
-
-    function resetAll() {
-      // Clear textarea and stored dump
-      dumpEl.value = '';
-      dumpEl.style.height = 'auto';
-      lastDump = '';
-
-      // Clear all text outputs
-      ['linkedin-out','casestudy-out','resume-out','pitch-out','gaps-out'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = '';
-      });
-
-      // Reset carousel
-      document.getElementById('slide-grid').innerHTML = '';
-      document.getElementById('carousel-block').style.display = 'none';
-      document.getElementById('gate-panel').style.display = 'none';
-      document.getElementById('resume-note').style.display = 'none';
-      document.getElementById('pitch-note').style.display = 'none';
-      _svgs = [];
-
-      // Restore empty state
-      document.getElementById('output-empty').style.display = 'flex';
-      document.getElementById('output-sections').classList.remove('visible');
-
-      // Hide header buttons
-      document.getElementById('rerun-all-btn').style.display = 'none';
-      document.getElementById('new-dump-btn').style.display = 'none';
-
-      // Expand and focus the input
-      expandDump();
-      dumpEl.focus();
-    }
-
-    function collapseDump() {
-      document.getElementById('input-dock').classList.add('collapsed');
-    }
-    function expandDump() {
-      const dock = document.getElementById('input-dock');
-      if (dock.classList.contains('collapsed')) dock.classList.remove('collapsed');
-    }
-    function toggleDump(e) {
-      if (e) e.stopPropagation();
-      document.getElementById('input-dock').classList.toggle('collapsed');
-    }
-
-    function copy(id, btn) {
-      navigator.clipboard.writeText(document.getElementById(id).textContent).then(() => {
-        btn.textContent = 'Copied';
-        btn.classList.add('done');
-        setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2200);
-      });
-    }
-
-    function setLoading(on) {
-      const rerunAll = document.getElementById('rerun-all-btn');
-      if (rerunAll) rerunAll.disabled = on;
-      const btn = document.getElementById('generate-btn');
-      btn.disabled    = on;
-      btn.textContent = on ? 'Running...' : 'Run debrief';
-      const dbtn = document.getElementById('demo-btn');
-      if (dbtn) dbtn.disabled = on;
-      document.getElementById('loading-row').classList.toggle('visible', on);
-      if (on) {
-        document.getElementById('output-empty').style.display   = 'none';
-        document.getElementById('output-sections').classList.remove('visible');
-        const label = document.querySelector('.loading-label');
-        clearInterval(loadingTimer);
-        label.textContent = LOADING_LINES[0];
-        let idx = 1;
-        loadingTimer = setInterval(() => {
-          label.textContent = LOADING_LINES[idx];
-          idx++;
-          if (idx >= LOADING_LINES.length) { clearInterval(loadingTimer); loadingTimer = null; }
-        }, 2000);
-      } else {
-        clearInterval(loadingTimer);
-        loadingTimer = null;
-        document.querySelector('.loading-label').textContent = 'processing';
-      }
-    }
-
-    function flash(id) {
-      const el = document.getElementById(id);
-      el.classList.add('show');
-      setTimeout(() => el.classList.remove('show'), 1800);
-    }
-
-    function placeholder() {
-      return `===LINKEDIN===
-This is where the LinkedIn post draft will appear.
-
-It opens on a flat claim — the decision or the insight, stated first. Short sentences prove it with the build. One idea. A real question at the end that a peer would actually answer.
-
-Default 120 words. Up to 250 only when the idea needs the room.
-===CASESTUDY===
-- Problem:         [the failure mode or gap the build addressed]
-- Decision:        [the behavioral or architectural choice she made]
-- Constraint:      [the hard limit she designed around]
-- System behavior: [what the system actually does now, the mechanism]
-- Evidence:        [proof it works: real metric, held-out test, or explainability — never fabricated]
-- Outcome:         [what changed, or the failure mode eliminated]
-===RESUME===
-[Strong action verb] [the system or layer built], [separating or enforcing what], [to achieve what outcome]. No metric unless real.
-===PITCH===
-This is how I think: [the judgment the build reveals, not the feature, the reasoning underneath it].
-===GAPS===
-- [What metric would strengthen the outline, if she can supply one]
-- [Any claim softened because the dump did not fully support it]
-- [NDA note if anonymization was applied]
-- [Where five more minutes of her input most improves the set]
-===END===`;
-    }
-  </script>
-</body>
-</html>
+If you have set a threshold in your own system, what drove that number?`;
+const BAD="I'm excited to share what I shipped \u2014 a guardrail layer that cut false positives 63% and drove 92% reviewer adoption at Northwind Realty.\n\nThe deterministic cap fixed it. Full writeup at jodipl.com/workbench.\n\nThoughts?\n\n#AI #design #UX #product #buildinpublic";
+renderGate(runPublishGate(OK,DUMP));
+document.getElementById('gate-panel').id='done';
+document.getElementById('g2').id='gate-panel';
+renderGate(runPublishGate(BAD,DUMP));
+</script></body></html>
