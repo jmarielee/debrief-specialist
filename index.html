@@ -18,12 +18,11 @@
       --paper:       #F3F1EA;
       --paper-warm:  #EAE7DE;
       --paper-rule:  #D5D1C6;
-      --paper-muted: #B0AB9F;
+      --paper-quiet: #6E6A60;
       --on-ink:      #E8E4D9;
       --on-ink-dim:  #8E897E;
       --accent:      #6A5840;
       --yellow:      #F5CC38;
-      --yellow-soft: rgba(245, 204, 56, 0.12);
       --red:         #9B3223;
       --red-soft:    rgba(155, 50, 35, 0.06);
       --green:       #3F6B45;
@@ -193,7 +192,7 @@
       font-size: 12px;
       font-weight: 500;
       letter-spacing: 0.2em;
-      color: var(--paper-muted);
+      color: var(--paper-quiet);
       width: 32px;
       flex-shrink: 0;
     }
@@ -488,7 +487,7 @@
       font-size: 11px;
       font-weight: 400;
       letter-spacing: 0.07em;
-      color: var(--paper-muted);
+      color: var(--paper-quiet);
     }
     .slide-dl-btn {
       background: none;
@@ -498,7 +497,7 @@
       font-weight: 400;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--paper-muted);
+      color: var(--paper-quiet);
       cursor: pointer;
       padding: 0;
       transition: color 0.12s;
@@ -598,7 +597,7 @@
       font-weight: 600;
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: #9A7A0E;
+      color: var(--flag);
       margin-bottom: 6px;
     }
     .gate-verdict {
@@ -625,7 +624,7 @@
     }
     .gate-scope b { font-weight: 700; }
 
-    .gate-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
+    .gate-row { font-size: 12px; font-weight: 400; color: var(--ink-muted); display: flex; gap: 7px; line-height: 1.7; }
     .gate-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; }
     /* Colour lives in the mark, not the label, so a clean panel stays quiet. */
     .gate-row.is-pass .hp { color: var(--green); }
@@ -648,8 +647,8 @@
 
     /* ─── HONESTY CHECK (resume + pitch one-liners) ─── */
     .honesty-note { margin-top: 28px; }
-    .honesty-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A7A0E; margin-bottom: 5px; }
-    .honesty-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
+    .honesty-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--flag); margin-bottom: 5px; }
+    .honesty-row { font-size: 12px; font-weight: 400; color: var(--ink-muted); display: flex; gap: 7px; line-height: 1.7; }
     .honesty-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; color: var(--green); }
     .honesty-row.is-fail { color: var(--red); font-weight: 600; }
     .honesty-row.is-fail .hp { color: var(--red); }
@@ -957,6 +956,9 @@ Return as a single JSON array: [ { ... }, { ... }, { ... }, { ... }, { ... }, { 
 ===END===
 `;
 
+    // One place, so the two call sites can never drift apart.
+    const MODEL = 'claude-sonnet-5';
+
     function saveKey() {
       const val = document.getElementById('api-key-input').value.trim();
       if (!val) return;
@@ -1082,7 +1084,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
             'anthropic-dangerous-direct-browser-access': 'true',
           },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
+            model: MODEL,
             max_tokens: 4096,
             system: SYSTEM_PROMPT,
             messages: [{ role: 'user', content: dump }],
@@ -1158,10 +1160,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       return out;
     }
 
-    function esc(s) {
-      return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    }
-
+    // Note: esc() is defined once, in the SVG engine below, and used here too.
     function renderGate(results) {
       const panel = document.getElementById('gate-panel');
       const fails = results.filter(r => r.status === 'fail').length;
@@ -1515,7 +1514,7 @@ ${body}
             'anthropic-dangerous-direct-browser-access': 'true',
           },
           body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
+            model: MODEL,
             max_tokens: 1500,
             system: SYSTEM_PROMPT,
             messages: [{ role: 'user', content: userMsg }],
@@ -1641,31 +1640,6 @@ ${body}
       setTimeout(() => el.classList.remove('show'), 1800);
     }
 
-    function placeholder() {
-      return `===LINKEDIN===
-This is where the LinkedIn post draft will appear.
-
-It opens on a flat claim — the decision or the insight, stated first. Short sentences prove it with the build. One idea. A real question at the end that a peer would actually answer.
-
-Default 120 words. Up to 250 only when the idea needs the room.
-===CASESTUDY===
-- Problem:         [the failure mode or gap the build addressed]
-- Decision:        [the behavioral or architectural choice she made]
-- Constraint:      [the hard limit she designed around]
-- System behavior: [what the system actually does now, the mechanism]
-- Evidence:        [proof it works: real metric, held-out test, or explainability — never fabricated]
-- Outcome:         [what changed, or the failure mode eliminated]
-===RESUME===
-[Strong action verb] [the system or layer built], [separating or enforcing what], [to achieve what outcome]. No metric unless real.
-===PITCH===
-This is how I think: [the judgment the build reveals, not the feature, the reasoning underneath it].
-===GAPS===
-- [What metric would strengthen the outline, if she can supply one]
-- [Any claim softened because the dump did not fully support it]
-- [NDA note if anonymization was applied]
-- [Where five more minutes of her input most improves the set]
-===END===`;
-    }
   </script>
 </body>
 </html>
