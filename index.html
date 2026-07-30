@@ -24,6 +24,9 @@
       --accent:      #6A5840;
       --yellow:      #F5CC38;
       --yellow-soft: rgba(245, 204, 56, 0.12);
+      --red:         #9B3223;
+      --red-soft:    rgba(155, 50, 35, 0.06);
+      --flag:        #7A6400;
 
       --sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
       --mono: 'Courier New', Courier, monospace;
@@ -597,14 +600,43 @@
       color: #9A7A0E;
       margin-bottom: 6px;
     }
-    .gate-row { font-size: 12px; font-weight: 400; color: #6B6862; display: flex; gap: 7px; line-height: 1.7; }
-    .gate-row .hp { font-weight: 700; color: #1A1916; width: 11px; flex-shrink: 0; text-align: center; }
+    .gate-verdict {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      margin-bottom: 9px;
+      color: var(--ink);
+    }
+    .gate-verdict.is-blocked { color: var(--red); }
+
+    .gate-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
+    .gate-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; }
+    .gate-row.is-pass .hp { color: var(--paper-muted); }
+    .gate-row.is-flag { color: var(--flag); }
+    .gate-row.is-flag .hp { color: var(--flag); }
+    .gate-row.is-fail { color: var(--red); font-weight: 600; }
+    .gate-row.is-fail .hp { color: var(--red); }
+
+    /* The evidence. Mono because it is machine output, not prose. */
+    .gate-detail {
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.55;
+      margin: 2px 0 8px 18px;
+      padding: 3px 7px;
+      border-left: 2px solid var(--paper-rule);
+      color: var(--ink-muted);
+    }
+    .gate-detail.is-fail { color: var(--red); border-left-color: var(--red); background: var(--red-soft); }
 
     /* ─── HONESTY CHECK (resume + pitch one-liners) ─── */
     .honesty-note { margin-top: 28px; }
     .honesty-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #9A7A0E; margin-bottom: 5px; }
-    .honesty-row { font-size: 12px; font-weight: 400; color: #6B6862; display: flex; gap: 7px; line-height: 1.7; }
-    .honesty-row .hp { font-weight: 700; color: #1A1916; width: 11px; flex-shrink: 0; text-align: center; }
+    .honesty-row { font-size: 12px; font-weight: 400; color: var(--paper-muted); display: flex; gap: 7px; line-height: 1.7; }
+    .honesty-row .hp { font-weight: 700; width: 11px; flex-shrink: 0; text-align: center; color: var(--paper-muted); }
+    .honesty-row.is-fail { color: var(--red); font-weight: 600; }
+    .honesty-row.is-fail .hp { color: var(--red); }
   </style>
 </head>
 <body>
@@ -791,7 +823,7 @@ RULE 1. FIND THE BEHAVIORAL DECISION FIRST.
 Before you write anything, locate the behavioral or architectural decision inside the dump. Not the feature. Not the UI. The decision about how the system behaves, decides, escalates, refuses, or hands off. That decision is the lead. Everything you produce orbits it.
 
 RULE 2. STRUCTURE HAPPENS IN THE CAPTURE.
-You never hand back a tidied dump. You hand back four finished structures.
+You never hand back a tidied dump. You hand back five finished structures.
 
 RULE 3. USE HER LANGUAGE, CORRECTLY.
 Use her real vocabulary only when the build actually demonstrates it. Misapplied jargon is worse than plain language.
@@ -1063,6 +1095,16 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
     const PUBLISH_PROTECTED = ['Northwind Realty'];
     const KILL_LIST = ['really excited','excited to share','thrilled to','humbled to',"i'm excited",'the result?','thoughts?'];
 
+    // One definition of "unbacked number," used by both the publish gate and the
+    // honesty check so the two can never disagree. Exact token match, not substring:
+    // a substring test lets a fabricated "85%" pass whenever the dump happens to
+    // contain "1850," which would make the no-fabricated-metric claim untrue.
+    function unbackedNumbers(text, dump) {
+      const backed = new Set(((dump || '').replace(/,/g,'').match(/\d+(?:\.\d+)?/g) || []));
+      const used   = ((text || '').replace(/,/g,'').match(/\d+(?:\.\d+)?%?/g) || []);
+      return [...new Set(used.filter(n => !backed.has(n.replace('%',''))))];
+    }
+
     function runPublishGate(draft, dump) {
       draft = draft || ''; dump = (dump || '');
       const low = draft.toLowerCase();
@@ -1079,11 +1121,11 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       out.push({ k:'Four hashtags or fewer', status: tags.length > 4 ? 'fail' : 'pass',
                  d: tags.length > 4 ? (tags.length + ' hashtags') : '' });
 
-      const dnum = dump.replace(/,/g,'');
-      const nums = (draft.match(/\d+(?:\.\d+)?%?/g) || []).map(n => n.replace(/,/g,''));
-      const stray = [...new Set(nums.filter(n => !dnum.includes(n.replace('%',''))))];
-      out.push({ k:'No number absent from the dump', status: stray.length ? 'flag' : 'pass',
-                 d: stray.length ? ('check: ' + stray.join(', ') + ' (possible fabricated metric)') : '' });
+      // Honesty rule, not a style rule: this blocks. Rule 4 is a hard rule, so a
+      // number with nothing behind it cannot coexist with "clear to publish."
+      const stray = unbackedNumbers(draft, dump);
+      out.push({ k:'No number absent from the dump', status: stray.length ? 'fail' : 'pass',
+                 d: stray.length ? ('remove or source: ' + stray.join(', ') + ' (not in the brain download)') : '' });
 
       const hit = PUBLISH_PROTECTED.filter(n => low.includes(n.toLowerCase()));
       out.push({ k:'No protected client name', status: hit.length ? 'fail' : 'pass',
@@ -1100,16 +1142,30 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       return out;
     }
 
+    function esc(s) {
+      return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    }
+
     function renderGate(results) {
       const panel = document.getElementById('gate-panel');
       const fails = results.filter(r => r.status === 'fail').length;
       const pip = { pass:'\u2713', fail:'\u2717', flag:'!' };
-      const verdict = fails ? (fails + ' to fix') : 'clear to publish';
-      const rows = results.map(r =>
-        '<div class="gate-row"><span class="hp">' + pip[r.status] + '</span><span>' + r.k + '</span></div>'
-      ).join('');
+      const verdict = fails ? (fails === 1 ? '1 thing to fix' : fails + ' things to fix') : 'Clear to publish';
+
+      const rows = results.map(r => {
+        const row = '<div class="gate-row is-' + r.status + '">'
+                  + '<span class="hp">' + pip[r.status] + '</span><span>' + r.k + '</span></div>';
+        // The evidence. Computed for every check; shown only where there is a problem,
+        // because a finding without its receipt is just an assertion.
+        const detail = (r.status !== 'pass' && r.d)
+          ? '<div class="gate-detail is-' + r.status + '">' + esc(r.d) + '</div>'
+          : '';
+        return row + detail;
+      }).join('');
+
       panel.innerHTML =
-        '<div class="gate-eyebrow">Publish gate &middot; the math decides &middot; ' + verdict + '</div>'
+        '<div class="gate-eyebrow">Publish gate &middot; the math decides</div>'
+        + '<div class="gate-verdict' + (fails ? ' is-blocked' : '') + '">' + verdict + '</div>'
         + rows;
       panel.style.display = 'block';
     }
@@ -1120,9 +1176,7 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       text = text || ''; dump = (dump || '');
       const low = text.toLowerCase();
       const name = PUBLISH_PROTECTED.filter(n => low.includes(n.toLowerCase()));
-      const dnum = dump.replace(/,/g,'');
-      const nums = (text.match(/\d+(?:\.\d+)?%?/g) || []).map(n => n.replace(/,/g,''));
-      const stray = [...new Set(nums.filter(n => !dnum.includes(n.replace('%',''))))];
+      const stray = unbackedNumbers(text, dump);
       return { name, stray };
     }
 
@@ -1131,7 +1185,8 @@ This is how I think: I do not trust an LLM to enforce a hard limit, so I design 
       if (!text || text === '(not found)') { note.style.display = 'none'; return; }
       const r = honestyChecks(text, (typeof lastDump !== 'undefined' ? lastDump : ''));
       const row = (ok, okTxt, badTxt) =>
-        '<div class="honesty-row"><span class="hp">' + (ok ? '\u2713' : '\u2717') + '</span><span>' + (ok ? okTxt : badTxt) + '</span></div>';
+        '<div class="honesty-row ' + (ok ? 'is-pass' : 'is-fail') + '"><span class="hp">'
+        + (ok ? '\u2713' : '\u2717') + '</span><span>' + esc(ok ? okTxt : badTxt) + '</span></div>';
       note.innerHTML =
         '<div class="honesty-eyebrow">Honesty check</div>'
         + row(!r.name.length, 'no protected client name', 'protected name: remove ' + r.name.join(', '))
