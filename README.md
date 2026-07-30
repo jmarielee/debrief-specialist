@@ -13,19 +13,25 @@ I design how AI systems behave and decide, not just how they look. This one deci
 
 **Verify it yourself, in just a few minutes.** 
 
-1. **The NDA firewall held.** Search the whole tree and the full commit history
-   for any client name. There is none. Run `git log -p | grep -i "realty"` (or any client-style name you can think of)
-against the full history and it comes back empty. The real protected names live only
-   in a gitignored local file that was never committed, so the firewall never had
-   the thing it protects in the repo to begin with.
+1. **The NDA firewall held.** The protected names live in a gitignored local file that
+   was never committed, so the firewall never had the thing it protects in the repo to
+   begin with. Verify it against the full history, not just the current tree:
+   `git log --all --name-only --pretty=format: | sort -u | grep -i local` returns nothing.
+   The one client-shaped string you will find, "Northwind Realty," is fictional. I wrote
+   it as a trap so the refusal has something to catch in public (see #4).
 2. **It anonymizes on its own.** In the live demo, the input brain download names a client.
    The outputs say "a real-estate brokerage." I never told it to hide that. It did,
    and flagged that it did.
-3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate runs seven checks in code, including em-dashes, a number not in the output, and a leaked name.. The model writes. Code rules it publish-ready or not.
+3. **The math decides, not the model.** Under the LinkedIn draft, a publish gate runs seven checks in code: em-dashes, a number that does not appear in the brain download, a leaked name, and four more. The model writes. Code rules it publish-ready or not, and the two honesty checks block rather than warn.
 4. **Watch it fail on purpose.** The trap name "Northwind Realty" trips the gate
    live, so you can see the refusal happen, not just read that it exists.
-5. **It never asserts what it cannot back up.** No fabricated metric, anywhere. If
-   the brain download has no number, the output has no number, and the gap is flagged.
+5. **It never asserts what it cannot back up.** If the brain download has no number,
+   the output has no number, and the gap is flagged. The check is an exact token match
+   against the download, and it blocks the verdict rather than warning about it. Its
+   known limit: if the download contains the bare token, a different use of that same
+   token passes, so "3 weeks" in the download will let "3%" through. It catches invented
+   numbers, not every misused one. I would rather state that than claim an airtight
+   guarantee the code does not deliver.
 
 **For reviewers:** read [`brief.md`](./brief.md) first. One painful problem, scoped to exactly five outputs, nothing more. The judgment to notice is the scoping: what I refused to add is as deliberate as what I built.
 
